@@ -9,20 +9,28 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/archive")
 class ArchiveController {
+
+    @Operation(summary = "영상 시청 기록 목록 조회 API", description = "")
+    @GetMapping("/videos")
+    fun getWatchedVideos(): ResponseDTO {
+        return ResponseDTO()
+    }
+
     @Operation(summary = "나중에 볼 영상 등록 API", description = "")
-    @PostMapping("/video")
-    fun addVideo(): ResponseDTO {
+    @PostMapping("/last/video/{videoId}")
+    fun addVideo(@PathVariable videoId: String): ResponseDTO {
         return ResponseDTO()
     }
 
     @Operation(summary = "나중에 볼 영상 목록 조회 API", description = "")
-    @GetMapping("/videos")
-    fun getLikedVideos(): ResponseDTO {
+    @GetMapping("/last/videos")
+    fun getLastVideos(): ResponseDTO {
         return ResponseDTO()
     }
 
+
     @Operation(summary = "타임스탬프 등록 API", description = "")
-    @PostMapping("/time/{videoId}")
+    @PostMapping("/time/video/{videoId}")
     fun stampCurrentTime(@PathVariable videoId: String): ResponseDTO {
         return ResponseDTO()
     }

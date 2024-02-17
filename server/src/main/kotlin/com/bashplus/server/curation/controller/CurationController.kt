@@ -11,7 +11,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/curation")
 class CurationController {
-    @GetMapping("{userId}/video/recommendation")
+    @GetMapping("video//user/{userId}/recommendation")
     fun getRecommendedVideos(@PathVariable userId: String): ResponseDTO {
         return ResponseDTO()
     }
