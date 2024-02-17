@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/information")
 class InformationController {
     @Operation(summary = "컨퍼런스 주최 목록 API", description = "검색 시 선택지 제공을 위한 목록 API")
-    @GetMapping("/hosts")
+    @GetMapping("/conference/hosts")
     fun getHosts(): ResponseDTO {
         return ResponseDTO()
     }
 
-    @Operation(summary = "컨퍼런스 카테고리 목록 API", description = "검색 시 선택지 제공을 위한 목록 API")
-    @GetMapping("/category")
+    @Operation(summary = "카테고리 목록 API", description = "검색 시 선택지 제공을 위한 목록 API")
+    @GetMapping("/conference/category")
     fun getCategory(): ResponseDTO {
         return ResponseDTO()
     }
