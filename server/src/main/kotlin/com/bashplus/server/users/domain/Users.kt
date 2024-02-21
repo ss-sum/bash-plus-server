@@ -6,10 +6,11 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 
 @Entity
-class Users(type: String, name: String, access: String? = null, refresh: String? = null, email: String? = null) {
+class Users(id: String, type: String, name: String, access: String? = null, refresh: String? = null, email: String? = null) {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    var id: String? = null
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var uid: Long? = null
+    var id: String = id
     var type: String = type
     var name: String = name
     var access: String? = access

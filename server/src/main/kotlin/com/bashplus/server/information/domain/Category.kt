@@ -6,10 +6,10 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 
 @Entity
-class category(category: String, level: Int) {
+class Category(category: String, level: Int) {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    var tid: String? = null
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var tid: Long? = null
     var category: String = category
     var level: Int = level
 }

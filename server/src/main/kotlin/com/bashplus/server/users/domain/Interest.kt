@@ -1,15 +1,11 @@
 package com.bashplus.server.users.domain
 
-import jakarta.persistence.Entity
-import jakarta.persistence.GeneratedValue
-import jakarta.persistence.GenerationType
-import jakarta.persistence.Id
+import com.bashplus.server.information.domain.Category
+import jakarta.persistence.*
 
 @Entity
-class Interest(uid: String, tid: String) {
+class Interest(@ManyToOne @JoinColumn(name = "uid") var users: Users, @ManyToOne @JoinColumn(name = "tid") var category: Category) {
     @Id
-    @GeneratedValue(strategy = GenerationType.UUID)
-    var utid: String? = null
-    var uid: String = uid
-    var tid: String = tid
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    var utid: Long? = null
 }
