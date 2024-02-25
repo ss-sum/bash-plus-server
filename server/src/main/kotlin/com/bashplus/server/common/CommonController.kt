@@ -10,4 +10,5 @@ class CommonController {
     fun healthCheckController(): ResponseEntity<Void> {
         return ResponseEntity.ok().build();
     }
+
 }
