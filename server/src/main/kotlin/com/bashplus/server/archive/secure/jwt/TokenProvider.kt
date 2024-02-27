@@ -56,16 +56,8 @@ class TokenProvider : InitializingBean {
 
     open fun validateToken(token: String): Boolean {
         val verifier: JWTVerifier = JWT.require(Algorithm.HMAC512(secret)).build()
-
-        try {
-            val decodedJWT: DecodedJWT = verifier.verify(token)
-            return true
-        } catch (e: SecurityException) {
-            // 잘못된 JWT 서명
-        } catch (e: IllegalArgumentException) {
-            // 잘못된 JWT 토큰
-        }
-        return false
+        val decodedJWT: DecodedJWT = verifier.verify(token)
+        return true
 
     }
 }

@@ -1,6 +1,8 @@
 package com.bashplus.server.archive.secure.oauth2.handler
 
 import com.bashplus.server.archive.secure.jwt.TokenProvider
+import com.bashplus.server.common.exception.ApiException
+import com.bashplus.server.common.exception.ExceptionEnum
 import com.bashplus.server.users.dto.OAuth2UserDTO
 import com.bashplus.server.users.repository.UsersRepository
 import jakarta.servlet.http.HttpServletRequest
@@ -17,11 +19,15 @@ class Oauth2AuthenticationSuccessHandler @Autowired constructor(private val toke
 
     override fun onAuthenticationSuccess(request: HttpServletRequest?, response: HttpServletResponse?, authentication: Authentication?) {
         val user: OAuth2UserDTO? = authentication?.principal as? OAuth2UserDTO
-        val accessToken = tokenProvider.createToken(authentication!!)
-        response?.addHeader("Authorization", accessToken)
-        usersRepository.updateToken(user?.id!!, user?.platform!!, accessToken, user.token)
-        val requestDispatcher = request?.getRequestDispatcher("/auth/authorization/${user.platform}")
-        requestDispatcher?.forward(request, response)
+        try {
+            val accessToken = tokenProvider.createToken(authentication!!)
+            response?.addHeader("Authorization", accessToken)
+            usersRepository.updateToken(user?.id!!, user?.platform!!, accessToken, user.token)
+            val requestDispatcher = request?.getRequestDispatcher("/auth/authorization/${user.platform}")
+            requestDispatcher?.forward(request, response)
+        } catch (e: Exception) {
+            throw ApiException(ExceptionEnum.TOKEN_ERROR)
+        }
     }
 
 

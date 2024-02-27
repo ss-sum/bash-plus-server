@@ -6,6 +6,7 @@ import com.bashplus.server.archive.secure.jwt.JwtFilter
 import com.bashplus.server.archive.secure.jwt.TokenProvider
 import com.bashplus.server.archive.secure.oauth2.handler.Oauth2AuthenticationFailureHandler
 import com.bashplus.server.archive.secure.oauth2.handler.Oauth2AuthenticationSuccessHandler
+import com.bashplus.server.common.CustomExceptionHandlerFilter
 import com.bashplus.server.users.repository.UsersRepository
 import com.bashplus.server.users.service.CustomOAuth2UserService
 import lombok.RequiredArgsConstructor
@@ -19,6 +20,7 @@ import org.springframework.security.config.annotation.web.configurers.CsrfConfig
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.oauth2.client.web.OAuth2LoginAuthenticationFilter
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
 import org.springframework.security.web.util.matcher.AntPathRequestMatcher
@@ -84,6 +86,8 @@ class SecurityConfig @Autowired constructor(private var tokenProvider: TokenProv
 
                 }
                 .addFilterBefore(JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter::class.java)
+                .addFilterBefore(CustomExceptionHandlerFilter(), JwtFilter::class.java)
+                .addFilterBefore(CustomExceptionHandlerFilter(), OAuth2LoginAuthenticationFilter::class.java)
 
         return http.build()
     }

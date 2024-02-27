@@ -12,5 +12,6 @@ import org.springframework.stereotype.Component
 class Oauth2AuthenticationFailureHandler : SimpleUrlAuthenticationFailureHandler() {
     override fun onAuthenticationFailure(request: HttpServletRequest?, response: HttpServletResponse?, exception: AuthenticationException?) {
         super.onAuthenticationFailure(request, response, exception)
+        response?.status = HttpServletResponse.SC_BAD_REQUEST
     }
 }
