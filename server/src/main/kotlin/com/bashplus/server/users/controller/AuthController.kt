@@ -5,19 +5,12 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
-import org.springframework.http.ResponseEntity
 import org.springframework.web.bind.annotation.*
 
 @Tag(name = "회원 인증 API", description = "회원 관련 기본 API - 회원가입, 로그인 관련")
 @RestController
 @RequestMapping("/auth")
 class AuthController {
-    @Operation(summary = "회원가입 API", description = "")
-    @PostMapping("/join")
-    fun join(): ResponseDTO {
-        return ResponseDTO()
-    }
-
 
     @Operation(summary = "소셜 로그인 API", description = "각 플랫폼의 인증을 통해서 로그인")
     @GetMapping("/login/social/platform/{platform}")
@@ -25,10 +18,10 @@ class AuthController {
 
     }
 
-    @Operation(summary = "소셜 로그인 API", description = "각 플랫폼의 인증을 통해서 로그인")
+    @Operation(summary = "소셜 로그인 API", description = "로그인 결과 반환")
     @GetMapping("/authorization/{platform}")
-    fun authorization(@PathVariable platform: String, request: HttpServletRequest, response: HttpServletResponse): ResponseEntity<String> {
-        return ResponseEntity.ok(response.getHeader("Authorization"))
+    fun authorization(@PathVariable platform: String): ResponseDTO {
+        return ResponseDTO()
     }
 
 

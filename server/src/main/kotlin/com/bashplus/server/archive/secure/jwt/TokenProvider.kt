@@ -4,13 +4,13 @@ import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier
 import com.auth0.jwt.algorithms.Algorithm
 import com.auth0.jwt.interfaces.DecodedJWT
-import com.bashplus.server.users.dto.Auth2UserDTO
 import org.springframework.beans.factory.InitializingBean
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.authority.SimpleGrantedAuthority
+import org.springframework.security.core.userdetails.User
 import org.springframework.stereotype.Component
 import java.util.*
 import java.util.stream.Collectors
@@ -35,7 +35,7 @@ class TokenProvider : InitializingBean {
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.joining(","))
         val expired: Date = Date(Date().time + this.tokenValidationTime)
-        return "Bearer " + JWT.create()
+        return JWT.create()
                 .withSubject(authentication.name)
                 .withClaim(AUTHORITIES_KEY, authorities)
                 .withExpiresAt(expired)
@@ -47,12 +47,10 @@ class TokenProvider : InitializingBean {
                 .build()
                 .verify(token)
                 .claims
-        val authorities = (claims[AUTHORITIES_KEY] as String).split(",")
-                .map { SimpleGrantedAuthority(it) }
-                .toList()
-        val user = Auth2UserDTO(claims["sub"]?.asString() ?: "", "", "") //TODO
-
-        return UsernamePasswordAuthenticationToken(user, token, authorities)
+        val authorities = claims[AUTHORITIES_KEY]?.asString()!!.split(",")
+                .map { SimpleGrantedAuthority(it) }.toList()
+        val principal = User(claims.get("subject").toString(), "", authorities)
+        return UsernamePasswordAuthenticationToken(principal, token, authorities)
 
     }
 

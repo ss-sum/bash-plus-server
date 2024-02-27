@@ -6,7 +6,8 @@ import com.bashplus.server.archive.secure.jwt.JwtFilter
 import com.bashplus.server.archive.secure.jwt.TokenProvider
 import com.bashplus.server.archive.secure.oauth2.handler.Oauth2AuthenticationFailureHandler
 import com.bashplus.server.archive.secure.oauth2.handler.Oauth2AuthenticationSuccessHandler
-import com.bashplus.server.users.service.OAuth2UserService
+import com.bashplus.server.users.repository.UsersRepository
+import com.bashplus.server.users.service.CustomOAuth2UserService
 import lombok.RequiredArgsConstructor
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
@@ -24,17 +25,21 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 
 @Configuration
 @RequiredArgsConstructor
-@EnableWebSecurity(debug = true)
-class SecurityConfig @Autowired constructor(private var tokenProvider: TokenProvider) {
-    private val userService: OAuth2UserService = OAuth2UserService()
-    private val authenticationSuccessHandler: Oauth2AuthenticationSuccessHandler = Oauth2AuthenticationSuccessHandler(tokenProvider)
+@EnableWebSecurity
+class SecurityConfig @Autowired constructor(private var tokenProvider: TokenProvider, private val userService: CustomOAuth2UserService, private val usersRepository: UsersRepository) {
+
+    private val authenticationSuccessHandler: Oauth2AuthenticationSuccessHandler = Oauth2AuthenticationSuccessHandler(tokenProvider, usersRepository)
     private val authenticationFailureHandler: Oauth2AuthenticationFailureHandler = Oauth2AuthenticationFailureHandler()
     private val jwtAccessDeniedHandler: JwtAccessDeniedHandler = JwtAccessDeniedHandler()
     private val jwtAuthenticationEntryPoint: JwtAuthenticationEntryPoint = JwtAuthenticationEntryPoint()
 
     @Bean
     fun webSecurityCustomizer(): WebSecurityCustomizer {
-        return WebSecurityCustomizer { web -> web.ignoring().requestMatchers(AntPathRequestMatcher("/auth/authorization/**")) }
+        return WebSecurityCustomizer { web ->
+            web.ignoring()
+                    .requestMatchers(AntPathRequestMatcher("/auth/authorization/**"))
+                    .requestMatchers(AntPathRequestMatcher("/"))
+        }
     }
 
     @Bean
@@ -66,7 +71,7 @@ class SecurityConfig @Autowired constructor(private var tokenProvider: TokenProv
                             .requestMatchers(AntPathRequestMatcher("/swagger-resources/**")).permitAll()
                             .requestMatchers(AntPathRequestMatcher("/error")).permitAll()
                             .requestMatchers(AntPathRequestMatcher("/oauth2/**")).permitAll()
-                            .requestMatchers(AntPathRequestMatcher("/auth/**")).permitAll()
+                            .requestMatchers(AntPathRequestMatcher("/auth/login/social/platform/**")).permitAll()
                             .anyRequest().authenticated()
                 }
                 .oauth2Login {
