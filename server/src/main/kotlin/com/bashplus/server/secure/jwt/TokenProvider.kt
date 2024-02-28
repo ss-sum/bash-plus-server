@@ -1,4 +1,4 @@
-package com.bashplus.server.archive.secure.jwt
+package com.bashplus.server.secure.jwt
 
 import com.auth0.jwt.JWT
 import com.auth0.jwt.JWTVerifier

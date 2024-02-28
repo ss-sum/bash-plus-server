@@ -1,4 +1,4 @@
-package com.bashplus.server.archive.secure.oauth2.handler
+package com.bashplus.server.secure.oauth2.handler
 
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse

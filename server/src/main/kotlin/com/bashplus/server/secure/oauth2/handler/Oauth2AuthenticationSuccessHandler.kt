@@ -1,8 +1,8 @@
-package com.bashplus.server.archive.secure.oauth2.handler
+package com.bashplus.server.secure.oauth2.handler
 
-import com.bashplus.server.archive.secure.jwt.TokenProvider
 import com.bashplus.server.common.exception.ApiException
 import com.bashplus.server.common.exception.ExceptionEnum
+import com.bashplus.server.secure.jwt.TokenProvider
 import com.bashplus.server.users.dto.OAuth2UserDTO
 import com.bashplus.server.users.repository.UsersRepository
 import jakarta.servlet.http.HttpServletRequest

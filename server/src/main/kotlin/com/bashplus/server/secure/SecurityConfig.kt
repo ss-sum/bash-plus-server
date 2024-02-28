@@ -1,12 +1,12 @@
-package com.bashplus.server.archive.secure
+package com.bashplus.server.secure
 
-import com.bashplus.server.archive.secure.jwt.JwtAccessDeniedHandler
-import com.bashplus.server.archive.secure.jwt.JwtAuthenticationEntryPoint
-import com.bashplus.server.archive.secure.jwt.JwtFilter
-import com.bashplus.server.archive.secure.jwt.TokenProvider
-import com.bashplus.server.archive.secure.oauth2.handler.Oauth2AuthenticationFailureHandler
-import com.bashplus.server.archive.secure.oauth2.handler.Oauth2AuthenticationSuccessHandler
 import com.bashplus.server.common.CustomExceptionHandlerFilter
+import com.bashplus.server.secure.jwt.JwtAccessDeniedHandler
+import com.bashplus.server.secure.jwt.JwtAuthenticationEntryPoint
+import com.bashplus.server.secure.jwt.JwtFilter
+import com.bashplus.server.secure.jwt.TokenProvider
+import com.bashplus.server.secure.oauth2.handler.Oauth2AuthenticationFailureHandler
+import com.bashplus.server.secure.oauth2.handler.Oauth2AuthenticationSuccessHandler
 import com.bashplus.server.users.repository.UsersRepository
 import com.bashplus.server.users.service.CustomOAuth2UserService
 import lombok.RequiredArgsConstructor
@@ -80,7 +80,7 @@ class SecurityConfig @Autowired constructor(private var tokenProvider: TokenProv
                     it.userInfoEndpoint { endpoint ->
                         endpoint.userService(userService)
                     }
-                            .authorizationEndpoint { endpoint -> endpoint.baseUri("/auth/login/social/platform/") }
+                            .authorizationEndpoint { endpoint -> endpoint.baseUri("/auth/login/social/platform") }
                             .successHandler(authenticationSuccessHandler)
                             .failureHandler(authenticationFailureHandler)
 

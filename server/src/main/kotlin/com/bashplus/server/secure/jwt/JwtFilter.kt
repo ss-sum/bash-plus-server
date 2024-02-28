@@ -1,4 +1,4 @@
-package com.bashplus.server.archive.secure.jwt
+package com.bashplus.server.secure.jwt
 
 import jakarta.servlet.FilterChain
 import jakarta.servlet.ServletRequest
