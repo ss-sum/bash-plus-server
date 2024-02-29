@@ -1,10 +1,11 @@
-package com.bashplus.server.secure.oauth2.handler
+package com.bashplus.server.common.secure.oauth2.handler
 
 import com.bashplus.server.common.exception.ApiException
 import com.bashplus.server.common.exception.ExceptionEnum
-import com.bashplus.server.secure.jwt.TokenProvider
+import com.bashplus.server.common.secure.jwt.TokenProvider
 import com.bashplus.server.users.dto.OAuth2UserDTO
 import com.bashplus.server.users.repository.UsersRepository
+import jakarta.servlet.http.Cookie
 import jakarta.servlet.http.HttpServletRequest
 import jakarta.servlet.http.HttpServletResponse
 import lombok.RequiredArgsConstructor
@@ -21,8 +22,8 @@ class Oauth2AuthenticationSuccessHandler @Autowired constructor(private val toke
         val user: OAuth2UserDTO? = authentication?.principal as? OAuth2UserDTO
         try {
             val accessToken = tokenProvider.createToken(authentication!!)
-            response?.addHeader("Authorization", accessToken)
             usersRepository.updateToken(user?.id!!, user?.platform!!, accessToken, user.token)
+            response?.addCookie(Cookie("Authorization", accessToken))
             val requestDispatcher = request?.getRequestDispatcher("/auth/authorization/${user.platform}")
             requestDispatcher?.forward(request, response)
         } catch (e: Exception) {

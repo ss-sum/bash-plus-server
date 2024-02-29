@@ -1,12 +1,12 @@
-package com.bashplus.server.secure
+package com.bashplus.server.common.secure
 
 import com.bashplus.server.common.CustomExceptionHandlerFilter
-import com.bashplus.server.secure.jwt.JwtAccessDeniedHandler
-import com.bashplus.server.secure.jwt.JwtAuthenticationEntryPoint
-import com.bashplus.server.secure.jwt.JwtFilter
-import com.bashplus.server.secure.jwt.TokenProvider
-import com.bashplus.server.secure.oauth2.handler.Oauth2AuthenticationFailureHandler
-import com.bashplus.server.secure.oauth2.handler.Oauth2AuthenticationSuccessHandler
+import com.bashplus.server.common.secure.jwt.JwtAccessDeniedHandler
+import com.bashplus.server.common.secure.jwt.JwtAuthenticationEntryPoint
+import com.bashplus.server.common.secure.jwt.JwtFilter
+import com.bashplus.server.common.secure.jwt.TokenProvider
+import com.bashplus.server.common.secure.oauth2.handler.Oauth2AuthenticationFailureHandler
+import com.bashplus.server.common.secure.oauth2.handler.Oauth2AuthenticationSuccessHandler
 import com.bashplus.server.users.repository.UsersRepository
 import com.bashplus.server.users.service.CustomOAuth2UserService
 import lombok.RequiredArgsConstructor
