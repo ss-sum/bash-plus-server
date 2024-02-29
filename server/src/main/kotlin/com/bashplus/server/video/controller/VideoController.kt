@@ -24,8 +24,9 @@ class VideoController {
 
     @Operation(summary = "영상 댓글 조회 API", description = "")
     @GetMapping("/{videoId}/comments")
-    fun getVideoComments(@PathVariable videoId: String): ResponseDTO {
-        return ResponseDTO()
+    fun getVideoComments(@PathVariable videoId: Long): ResponseDTO {
+        val result = videoService.getVideoCommentInfo(videoId)
+        return ResponseDTO(result)
     }
 
     @Operation(summary = "영상 댓글 등록 API", description = "")

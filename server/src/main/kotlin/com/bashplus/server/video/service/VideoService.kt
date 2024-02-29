@@ -2,7 +2,9 @@ package com.bashplus.server.video.service
 
 import com.bashplus.server.common.exception.ApiException
 import com.bashplus.server.common.exception.ExceptionEnum
+import com.bashplus.server.video.dto.CommentDTO
 import com.bashplus.server.video.dto.VideoDTO
+import com.bashplus.server.video.repository.CommentRepository
 import com.bashplus.server.video.repository.VideoRepository
 import com.bashplus.server.video.repository.VideoTagRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,6 +18,9 @@ class VideoService {
     @Autowired
     private lateinit var videoTagRepository: VideoTagRepository
 
+    @Autowired
+    private lateinit var commentRepository: CommentRepository
+
     fun getVideoInfo(videoId: Long): VideoDTO {
         val video = videoRepository.findByVid(videoId)
         if (video.isPresent) {
@@ -24,5 +29,9 @@ class VideoService {
         } else {
             throw ApiException(ExceptionEnum.BAD_REQUEST)
         }
+    }
+
+    fun getVideoCommentInfo(videoId: Long): List<CommentDTO> {
+        return commentRepository.findAllByVideoVid(videoId).map { comment -> CommentDTO(comment) }
     }
 }
