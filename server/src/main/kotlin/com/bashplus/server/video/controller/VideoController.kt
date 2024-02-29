@@ -1,9 +1,11 @@
 package com.bashplus.server.video.controller
 
 import com.bashplus.server.common.ResponseDTO
+import com.bashplus.server.video.dto.CommentRequestDTO
 import com.bashplus.server.video.service.VideoService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.jetbrains.annotations.NotNull
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
@@ -31,7 +33,8 @@ class VideoController {
 
     @Operation(summary = "영상 댓글 등록 API", description = "")
     @PostMapping("/{videoId}/comment")
-    fun writeComment(@PathVariable videoId: String): ResponseDTO {
+    fun writeComment(@PathVariable videoId: String, @NotNull @RequestBody commentRequest: CommentRequestDTO): ResponseDTO {
+        videoService.writeComment(commentRequest)
         return ResponseDTO()
     }
 
