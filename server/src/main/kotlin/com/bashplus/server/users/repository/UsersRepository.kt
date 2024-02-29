@@ -13,7 +13,7 @@ import java.util.*
 open interface UsersRepository : JpaRepository<Users, String> {
     public fun findByIdAndType(id: String, type: String): Optional<Users>
 
-    public fun findByUid(uid: Int): Optional<Users>
+    public fun findByUid(uid: Long): Optional<Users>
 
     @Transactional
     @Modifying

@@ -6,5 +6,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 open interface CommentRepository : JpaRepository<Comment, String> {
-    open fun findAllByUserUid(uid: Int): ArrayList<Comment>
+    open fun findAllByUserUid(uid: Long): ArrayList<Comment>
 }

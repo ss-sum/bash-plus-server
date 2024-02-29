@@ -1,8 +1,10 @@
 package com.bashplus.server.video.controller
 
 import com.bashplus.server.common.ResponseDTO
+import com.bashplus.server.video.service.VideoService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
+import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.web.bind.annotation.*
 
 @Tag(name = "비디오 API", description = "컨퍼런스 영상 관련 API")
@@ -10,10 +12,14 @@ import org.springframework.web.bind.annotation.*
 @RequestMapping("/video")
 class VideoController {
 
+    @Autowired
+    private lateinit var videoService: VideoService
+
     @Operation(summary = "영상 정보 API", description = "")
     @GetMapping("/{videoId}")
-    fun getVideo(@PathVariable videoId: String): ResponseDTO {
-        return ResponseDTO()
+    fun getVideo(@PathVariable videoId: Long): ResponseDTO {
+        val result = videoService.getVideoInfo(videoId)
+        return ResponseDTO(result)
     }
 
     @Operation(summary = "영상 댓글 조회 API", description = "")
