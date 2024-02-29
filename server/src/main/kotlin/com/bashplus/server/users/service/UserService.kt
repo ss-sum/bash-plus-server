@@ -24,7 +24,7 @@ class UserService {
     @Autowired
     private lateinit var commentRepository: CommentRepository
 
-    fun setInterestingCategory(userId: Int, request: ArrayList<InterestRequestDTO>) {
+    fun setInterestingCategory(userId: Long, request: ArrayList<InterestRequestDTO>) {
         val user = usersRepository.findByUid(userId)
         if (user.isPresent) {
             for (interest in request) {
@@ -36,7 +36,7 @@ class UserService {
         }
     }
 
-    fun getComments(userId: Int): List<CommentDTO> {
+    fun getComments(userId: Long): List<CommentDTO> {
         return commentRepository.findAllByUserUid(userId).map { comment -> CommentDTO(comment) }
     }
 }

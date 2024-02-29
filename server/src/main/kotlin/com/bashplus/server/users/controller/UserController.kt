@@ -22,7 +22,7 @@ class UserController {
 
     @Operation(summary = "관심분야 설정 API", description = "")
     @PostMapping("/{userId}/interesting")
-    fun setInterestingCategory(@PathVariable userId: Int, @NotNull @RequestBody interestRequest: Map<String, ArrayList<InterestRequestDTO>>): ResponseDTO {
+    fun setInterestingCategory(@PathVariable userId: Long, @NotNull @RequestBody interestRequest: Map<String, ArrayList<InterestRequestDTO>>): ResponseDTO {
         val paramList: ArrayList<InterestRequestDTO>? = interestRequest["param"]
         if (!paramList.isNullOrEmpty()) {
             userService.setInterestingCategory(userId, paramList)
@@ -34,7 +34,7 @@ class UserController {
 
     @Operation(summary = "댓글 기록 조회 API", description = "")
     @GetMapping("/{userId}/comments")
-    fun getComments(@PathVariable userId: Int): ResponseDTO {
+    fun getComments(@PathVariable userId: Long): ResponseDTO {
         val commentLists = userService.getComments(userId)
         return ResponseDTO(commentLists)
     }
