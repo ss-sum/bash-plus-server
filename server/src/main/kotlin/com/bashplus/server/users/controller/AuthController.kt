@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.*
 @RestController
 @RequestMapping("/auth")
 class AuthController {
-
     @Operation(summary = "소셜 로그인 API", description = "각 플랫폼의 인증을 통해서 로그인")
     @GetMapping("/login/social/platform/{platform}")
     fun socialLogin(@PathVariable platform: String, request: HttpServletRequest, response: HttpServletResponse): Unit {

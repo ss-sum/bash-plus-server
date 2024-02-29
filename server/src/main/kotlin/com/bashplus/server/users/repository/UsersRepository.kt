@@ -13,6 +13,8 @@ import java.util.*
 open interface UsersRepository : JpaRepository<Users, String> {
     public fun findByIdAndType(id: String, type: String): Optional<Users>
 
+    public fun findByUid(uid: Int): Optional<Users>
+
     @Transactional
     @Modifying
     @Query("UPDATE Users u SET u.access = :accessToken, u.refresh = :refreshToken WHERE u.id = :id and u.type = :type")
