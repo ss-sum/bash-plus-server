@@ -1,6 +1,8 @@
 package com.bashplus.server.users.controller
 
 import com.bashplus.server.common.ResponseDTO
+import com.bashplus.server.common.exception.ApiException
+import com.bashplus.server.common.exception.ExceptionEnum
 import com.bashplus.server.users.dto.InterestRequestDTO
 import com.bashplus.server.users.service.UserService
 import io.swagger.v3.oas.annotations.Operation
@@ -26,14 +28,14 @@ class UserController {
             userService.setInterestingCategory(userId, paramList)
             return ResponseDTO()
         } else {
-            // 예외 처리 또는 에러 응답을 수행하는 부분 추가
-            return ResponseDTO()
+            throw ApiException(ExceptionEnum.BAD_REQUEST)
         }
     }
 
     @Operation(summary = "댓글 기록 조회 API", description = "")
     @GetMapping("/{userId}/comments")
-    fun getComments(@PathVariable userId: String): ResponseDTO {
-        return ResponseDTO()
+    fun getComments(@PathVariable userId: Int): ResponseDTO {
+        val commentLists = userService.getComments(userId)
+        return ResponseDTO(commentLists)
     }
 }

@@ -5,6 +5,8 @@ import com.bashplus.server.users.domain.Interest
 import com.bashplus.server.users.dto.InterestRequestDTO
 import com.bashplus.server.users.repository.InterestRepository
 import com.bashplus.server.users.repository.UsersRepository
+import com.bashplus.server.video.dto.CommentDTO
+import com.bashplus.server.video.repository.CommentRepository
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.stereotype.Service
 
@@ -19,6 +21,9 @@ class UserService {
     @Autowired
     private lateinit var interestRepository: InterestRepository
 
+    @Autowired
+    private lateinit var commentRepository: CommentRepository
+
     fun setInterestingCategory(userId: Int, request: ArrayList<InterestRequestDTO>) {
         val user = usersRepository.findByUid(userId)
         if (user.isPresent) {
@@ -29,5 +34,9 @@ class UserService {
                 }
             }
         }
+    }
+
+    fun getComments(userId: Int): List<CommentDTO> {
+        return commentRepository.findAllByUserUid(userId).map { comment -> CommentDTO(comment) }
     }
 }
