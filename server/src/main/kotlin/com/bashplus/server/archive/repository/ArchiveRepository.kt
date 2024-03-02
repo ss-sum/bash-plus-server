@@ -15,6 +15,7 @@ open interface ArchiveRepository : JpaRepository<Archive, String> {
     open fun findByUserUidAndVideoVid(uid: Long, vid: Long): Optional<Archive>
     open fun findAllByUserUid(uid: Long): List<Archive>
     open fun findByUserUidAndLastIsTrue(uid: Long): List<Archive>
+    open fun findByUserUidAndLikesIsTrue(uid: Long): List<Archive>
 
     @Transactional
     @Modifying
@@ -25,4 +26,10 @@ open interface ArchiveRepository : JpaRepository<Archive, String> {
     @Modifying
     @Query("UPDATE Archive a SET a.last = :last WHERE a.uidvid= :id")
     open fun updateArchiveLast(@Param("id") uidvid: Long, @Param("last") last: Boolean)
+
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE Archive a SET a.likes = :like WHERE a.uidvid= :id")
+    open fun updateArchiveLikd(@Param("id") uidvid: Long, @Param("like") like: Boolean)
 }

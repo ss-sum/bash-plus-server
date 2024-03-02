@@ -32,7 +32,7 @@ class ArchiveController {
 
     @Operation(summary = "나중에 볼 영상 목록 조회 API", description = "")
     @GetMapping("/last/videos/user/{userId}")
-    fun getLastVideos(@PathVariable userId: Long): ResponseDTO {
+    fun getLikedVideos(@PathVariable userId: Long): ResponseDTO {
         val result = archiveService.getLastVideos(userId)
         return ResponseDTO(result)
     }
@@ -46,13 +46,15 @@ class ArchiveController {
 
     @Operation(summary = "좋아요한 영상 목록 조회 API", description = "")
     @GetMapping("/like/videos/user/{userId}")
-    fun getArchivedVideos(): ResponseDTO {
-        return ResponseDTO()
+    fun getArchivedVideos(@PathVariable userId: Long): ResponseDTO {
+        val result = archiveService.getLikeVideos(userId)
+        return ResponseDTO(result)
     }
 
     @Operation(summary = "비디오 좋아요 등록 API", description = "")
-    @PostMapping("/like/video/{videoId}/user/{userId}")
-    fun stampLikeOnVideo(@PathVariable videoId: String): ResponseDTO {
+    @PostMapping("/like/video")
+    fun stampLikeOnVideo(@RequestBody archiveVideoRequestDTO: ArchiveVideoRequestDTO): ResponseDTO {
+        archiveService.registerArchiveLikeVideo(archiveVideoRequestDTO)
         return ResponseDTO()
     }
 
