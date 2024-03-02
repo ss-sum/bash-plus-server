@@ -14,9 +14,15 @@ import java.util.*
 open interface ArchiveRepository : JpaRepository<Archive, String> {
     open fun findByUserUidAndVideoVid(uid: Long, vid: Long): Optional<Archive>
     open fun findAllByUserUid(uid: Long): List<Archive>
+    open fun findByUserUidAndLastIsTrue(uid: Long): List<Archive>
 
     @Transactional
     @Modifying
     @Query("UPDATE Archive a SET a.time = :time WHERE a.uidvid= :id")
     open fun updateArchiveWatchRecord(@Param("id") uidvid: Long, @Param("time") time: LocalTime)
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE Archive a SET a.last = :last WHERE a.uidvid= :id")
+    open fun updateArchiveLast(@Param("id") uidvid: Long, @Param("last") last: Boolean)
 }
