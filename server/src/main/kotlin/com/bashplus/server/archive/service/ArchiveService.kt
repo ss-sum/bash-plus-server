@@ -1,6 +1,7 @@
 package com.bashplus.server.archive.service
 
 import com.bashplus.server.archive.domain.Archive
+import com.bashplus.server.archive.dto.ArchiveVideoDTO
 import com.bashplus.server.archive.dto.ArchiveVideoRequestDTO
 import com.bashplus.server.archive.dto.ArchiveVideoWatchRecordDTO
 import com.bashplus.server.archive.repository.ArchiveRepository
@@ -40,5 +41,9 @@ class ArchiveService {
             }
 
         }
+    }
+
+    fun getLastVideos(userId: Long): List<ArchiveVideoDTO> {
+        return archiveRepository.findByUserUidAndLastIsTrue(userId).map { archive -> ArchiveVideoDTO(archive) }
     }
 }

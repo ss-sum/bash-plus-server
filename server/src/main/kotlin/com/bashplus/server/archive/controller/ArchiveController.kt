@@ -32,8 +32,9 @@ class ArchiveController {
 
     @Operation(summary = "나중에 볼 영상 목록 조회 API", description = "")
     @GetMapping("/last/videos/user/{userId}")
-    fun getLastVideos(): ResponseDTO {
-        return ResponseDTO()
+    fun getLastVideos(@PathVariable userId: Long): ResponseDTO {
+        val result = archiveService.getLastVideos(userId)
+        return ResponseDTO(result)
     }
 
 
