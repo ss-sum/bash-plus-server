@@ -13,6 +13,7 @@ import java.util.*
 @Repository
 open interface ArchiveRepository : JpaRepository<Archive, String> {
     open fun findByUserUidAndVideoVid(uid: Long, vid: Long): Optional<Archive>
+    open fun findAllByUserUid(uid: Long): List<Archive>
 
     @Transactional
     @Modifying
