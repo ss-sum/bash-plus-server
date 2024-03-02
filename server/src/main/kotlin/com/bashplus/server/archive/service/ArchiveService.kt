@@ -61,4 +61,8 @@ class ArchiveService {
             }
         }
     }
+
+    fun getLikeVideos(userId: Long): List<ArchiveVideoDTO> {
+        return archiveRepository.findByUserUidAndLikesIsTrue(userId).map { archive -> ArchiveVideoDTO(archive) }
+    }
 }
