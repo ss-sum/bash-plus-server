@@ -25,4 +25,10 @@ open interface ArchiveRepository : JpaRepository<Archive, String> {
     @Modifying
     @Query("UPDATE Archive a SET a.last = :last WHERE a.uidvid= :id")
     open fun updateArchiveLast(@Param("id") uidvid: Long, @Param("last") last: Boolean)
+
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE Archive a SET a.likes = :like WHERE a.uidvid= :id")
+    open fun updateArchiveLikd(@Param("id") uidvid: Long, @Param("like") like: Boolean)
 }

@@ -51,8 +51,9 @@ class ArchiveController {
     }
 
     @Operation(summary = "비디오 좋아요 등록 API", description = "")
-    @PostMapping("/like/video/{videoId}/user/{userId}")
-    fun stampLikeOnVideo(@PathVariable videoId: String): ResponseDTO {
+    @PostMapping("/like/video")
+    fun stampLikeOnVideo(@RequestBody archiveVideoRequestDTO: ArchiveVideoRequestDTO): ResponseDTO {
+        archiveService.registerArchiveLikeVideo(archiveVideoRequestDTO)
         return ResponseDTO()
     }
 

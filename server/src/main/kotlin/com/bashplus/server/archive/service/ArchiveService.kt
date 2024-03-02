@@ -30,7 +30,7 @@ class ArchiveService {
     fun registerArchiveLastVideo(archiveVideoRequestDTO: ArchiveVideoRequestDTO) {
         val result = archiveRepository.findByUserUidAndVideoVid(archiveVideoRequestDTO.uid, archiveVideoRequestDTO.vid)
         if (result.isPresent) {
-            archiveRepository.updateArchiveLast(result.get().uidvid ?: 0, true)
+            archiveRepository.updateArchiveLast(result.get().uidvid ?: 0, !result.get().last)
         } else {
             val user = usersRepository.findByUid(archiveVideoRequestDTO.uid)
             var video = videoRepository.findByVid(archiveVideoRequestDTO.vid)
@@ -45,5 +45,20 @@ class ArchiveService {
 
     fun getLastVideos(userId: Long): List<ArchiveVideoDTO> {
         return archiveRepository.findByUserUidAndLastIsTrue(userId).map { archive -> ArchiveVideoDTO(archive) }
+    }
+
+    fun registerArchiveLikeVideo(archiveVideoRequestDTO: ArchiveVideoRequestDTO) {
+        val result = archiveRepository.findByUserUidAndVideoVid(archiveVideoRequestDTO.uid, archiveVideoRequestDTO.vid)
+        if (result.isPresent) {
+            archiveRepository.updateArchiveLast(result.get().uidvid ?: 0, !result.get().likes)
+        } else {
+            val user = usersRepository.findByUid(archiveVideoRequestDTO.uid)
+            var video = videoRepository.findByVid(archiveVideoRequestDTO.vid)
+            if (user.isPresent && video.isPresent) {
+                archiveRepository.save(Archive(user.get(), video.get(), like = true))
+            } else {
+                throw ApiException(ExceptionEnum.BAD_REQUEST)
+            }
+        }
     }
 }
