@@ -1,5 +1,6 @@
 package com.bashplus.server.archive.controller
 
+import com.bashplus.server.archive.dto.ArchiveVideoRequestDTO
 import com.bashplus.server.archive.service.ArchiveService
 import com.bashplus.server.common.ResponseDTO
 import io.swagger.v3.oas.annotations.Operation
@@ -19,12 +20,13 @@ class ArchiveController {
     @GetMapping("/videos/usr/{userId}")
     fun getWatchedVideos(@PathVariable userId: Long): ResponseDTO {
         val result = archiveService.getVideoWatchRecords(userId)
-        return ResponseDTO()
+        return ResponseDTO(result)
     }
 
     @Operation(summary = "나중에 볼 영상 등록 API", description = "")
-    @PostMapping("/last/video/{videoId}/user/{userId}")
-    fun addVideo(@PathVariable videoId: String): ResponseDTO {
+    @PostMapping("/last/video")
+    fun addVideo(@RequestBody archiveVideoRequestDTO: ArchiveVideoRequestDTO): ResponseDTO {
+        archiveService.registerArchiveLastVideo(archiveVideoRequestDTO)
         return ResponseDTO()
     }
 

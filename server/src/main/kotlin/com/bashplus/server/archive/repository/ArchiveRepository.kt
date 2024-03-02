@@ -19,4 +19,9 @@ open interface ArchiveRepository : JpaRepository<Archive, String> {
     @Modifying
     @Query("UPDATE Archive a SET a.time = :time WHERE a.uidvid= :id")
     open fun updateArchiveWatchRecord(@Param("id") uidvid: Long, @Param("time") time: LocalTime)
+
+    @Transactional
+    @Modifying
+    @Query("UPDATE Archive a SET a.last = :last WHERE a.uidvid= :id")
+    open fun updateArchiveLast(@Param("id") uidvid: Long, @Param("last") last: Boolean)
 }
