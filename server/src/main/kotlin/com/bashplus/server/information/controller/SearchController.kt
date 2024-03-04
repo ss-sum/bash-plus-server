@@ -28,7 +28,8 @@ class SearchController {
     @Operation(summary = "컨퍼런스 주최 검색 API", description = "")
     @GetMapping("/conference/host/{keyword}")
     fun searchHost(@PathVariable keyword: String): ResponseDTO {
-        return ResponseDTO()
+        val result = searchService.getHostSearchResult(keyword)
+        return ResponseDTO(result)
     }
 
     @Operation(summary = "컨퍼런스 카테고리 검색 API", description = "")

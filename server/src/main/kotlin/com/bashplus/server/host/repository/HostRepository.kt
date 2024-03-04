@@ -8,4 +8,5 @@ import java.util.*
 @Repository
 open interface HostRepository : JpaRepository<Host, String> {
     open fun findByHid(hid: Long): Optional<Host>
+    open fun findAllByCompanyIsLike(company: String): List<Host>
 }
