@@ -1,6 +1,7 @@
 package com.bashplus.server.information.service
 
 import com.bashplus.server.host.repository.HostRepository
+import com.bashplus.server.information.dto.CategoryInformationDTO
 import com.bashplus.server.information.dto.HostInformationDTO
 import com.bashplus.server.information.repository.CategoryRepository
 import org.springframework.beans.factory.annotation.Autowired
@@ -16,8 +17,12 @@ class InformationService {
     private lateinit var categoryRepository: CategoryRepository
 
     fun getConferenceHosts(): List<HostInformationDTO> {
-        var result = hostRepository.findAll().map { host -> HostInformationDTO(host) }
+        val result = hostRepository.findAll().map { host -> HostInformationDTO(host) }
         return result
     }
 
+    fun getCategories(): List<CategoryInformationDTO> {
+        val result = categoryRepository.findAll().map { category -> CategoryInformationDTO(category) }
+        return result
+    }
 }
