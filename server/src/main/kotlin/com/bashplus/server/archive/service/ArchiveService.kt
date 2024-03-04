@@ -65,4 +65,8 @@ class ArchiveService {
     fun getLikeVideos(userId: Long): List<ArchiveVideoDTO> {
         return archiveRepository.findByUserUidAndLikesIsTrue(userId).map { archive -> ArchiveVideoDTO(archive) }
     }
+
+    fun registerArchiveTimeStamp(archiveVideoRequestDTO: ArchiveVideoRequestDTO) {
+        //TODO, 미정
+    }
 }

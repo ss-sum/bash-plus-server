@@ -40,7 +40,7 @@ class ArchiveController {
 
     @Operation(summary = "타임스탬프 등록 API", description = "")
     @PostMapping("/time/video/{videoId}/user/{userId}")
-    fun stampCurrentTime(@PathVariable videoId: String): ResponseDTO {
+    fun stampCurrentTime(@RequestBody archiveVideoRequestDTO: ArchiveVideoRequestDTO): ResponseDTO {
         return ResponseDTO()
     }
 
