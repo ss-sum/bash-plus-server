@@ -8,4 +8,5 @@ import java.util.*
 @Repository
 open interface VideoRepository : JpaRepository<Video, String> {
     open fun findByVid(vid: Long): Optional<Video>
+    open fun findAllByTitleIsLike(title: String): List<Video>
 }

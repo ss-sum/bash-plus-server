@@ -42,5 +42,10 @@ class SearchService {
         return result
     }
 
+    fun getVideoSearchResult(keyword: String): List<VideoInformationDTO> {
+        val result = videoRepository.findAllByTitleIsLike(keyword).map { video -> VideoInformationDTO(video) }
+        return result
+    }
+
 
 }

@@ -42,7 +42,8 @@ class SearchController {
     @Operation(summary = "컨퍼런스 비디오 제목 검색 API", description = "")
     @GetMapping("/conference/video/{keyword}")
     fun searchConference(@PathVariable keyword: String): ResponseDTO {
-        return ResponseDTO()
+        val result = searchService.getVideoSearchResult(keyword)
+        return ResponseDTO(result)
     }
 
 }
