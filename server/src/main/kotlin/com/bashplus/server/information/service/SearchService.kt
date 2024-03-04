@@ -2,6 +2,7 @@ package com.bashplus.server.information.service
 
 import com.bashplus.server.host.repository.ConferenceRepository
 import com.bashplus.server.host.repository.HostRepository
+import com.bashplus.server.information.dto.CategoryInformationDTO
 import com.bashplus.server.information.dto.HostInformationDTO
 import com.bashplus.server.information.dto.VideoInformationDTO
 import com.bashplus.server.information.repository.CategoryRepository
@@ -33,6 +34,11 @@ class SearchService {
 
     fun getHostSearchResult(keyword: String): List<HostInformationDTO> {
         val result = hostRepository.findAllByCompanyIsLike(keyword).map { host -> HostInformationDTO(host) }
+        return result
+    }
+
+    fun getCategorySearchResult(keyword: String): List<CategoryInformationDTO> {
+        val result = categoryRepository.findAllByCategoryIsLike(keyword).map { category -> CategoryInformationDTO(category) }
         return result
     }
 

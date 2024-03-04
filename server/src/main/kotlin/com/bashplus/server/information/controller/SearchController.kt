@@ -35,7 +35,8 @@ class SearchController {
     @Operation(summary = "컨퍼런스 카테고리 검색 API", description = "")
     @GetMapping("/category/{keyword}")
     fun searchCategory(@PathVariable keyword: String): ResponseDTO {
-        return ResponseDTO()
+        val result = searchService.getCategorySearchResult(keyword)
+        return ResponseDTO(result)
     }
 
     @Operation(summary = "컨퍼런스 비디오 제목 검색 API", description = "")

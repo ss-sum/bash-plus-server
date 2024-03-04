@@ -8,4 +8,5 @@ import java.util.*
 @Repository
 open interface CategoryRepository : JpaRepository<Category, String> {
     fun findByCategoryAndLevel(category: String, level: Int): Optional<Category>
+    open fun findAllByCategoryIsLike(category: String): List<Category>
 }
