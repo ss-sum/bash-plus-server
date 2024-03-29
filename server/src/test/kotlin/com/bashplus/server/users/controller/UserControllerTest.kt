@@ -5,7 +5,6 @@ import com.bashplus.server.host.repository.ConferenceRepository
 import com.bashplus.server.information.domain.Category
 import com.bashplus.server.information.repository.CategoryRepository
 import com.bashplus.server.setting.WithCustomMockUser
-import com.bashplus.server.users.domain.Interest
 import com.bashplus.server.users.domain.Users
 import com.bashplus.server.users.dto.InterestRequestDTO
 import com.bashplus.server.users.repository.InterestRepository
@@ -27,6 +26,7 @@ import org.springframework.test.web.servlet.MockMvc
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post
 import org.springframework.test.web.servlet.result.MockMvcResultHandlers.print
+import org.springframework.test.web.servlet.result.MockMvcResultMatchers.content
 import org.springframework.test.web.servlet.result.MockMvcResultMatchers.status
 import java.time.LocalDate
 
@@ -63,7 +63,6 @@ internal class UserControllerTest {
         user = usersRepository.save(Users("user", "google", "user"))
         user2 = usersRepository.save(Users("user2", "google", "user2"))
         val category: Category = categoryRepository.save(Category("spring", 1))
-        interestRepository.save(Interest(user, category))
         val conference: Conference = conferenceRepository.save(Conference("test1", null, LocalDate.now(), LocalDate.now()))
         val video: Video = videoRepository.save(Video(conference, "url", "test1", null))
         commentRepository.save(Comment(user, video, "test"))
@@ -91,7 +90,11 @@ internal class UserControllerTest {
                 .header("Authorization", "Bearer ")
                 .contentType("application/json"))
                 .andExpect(status().isOk)
+                .andExpect(content().json("{\"message\":\"OK\"}"))
                 .andDo(print())
+        assertTrue(interestRepository.findAllByUsersUid(user.uid!!).any {
+            it.category.category.equals("spring") && it.category.level == 1
+        })
     }
 
     @DisplayName("유저의 관심 카테고리를 설정하는 api가 정상적으로 오류를 응답하는지에 대한 테스트 - 카테고리 관련 오류")
@@ -109,11 +112,14 @@ internal class UserControllerTest {
                 .contentType("application/json"))
                 .andExpect(status().isBadRequest)
                 .andDo(print())
+        assertFalse(interestRepository.findAllByUsersUid(user.uid!!).any {
+            it.category.category.equals(inputs.get(0)) && it.category.level == Integer.parseInt(inputs.get(1))
+        })
     }
 
     @DisplayName("유저의 관심 카테고리를 설정하는 api가 정상적으로 오류를 응답하는지에 대한 테스트 - 유저 관련 오류")
     @ParameterizedTest
-    @ValueSource(strings = ["3", "none"])
+    @ValueSource(strings = ["3", "none", "-1", ";return;0"])
     @WithCustomMockUser
     fun setInterestingCategoryFailureByUserTest(text: String) {
         val objectMapper: ObjectMapper = ObjectMapper()
@@ -143,7 +149,7 @@ internal class UserControllerTest {
 
     @DisplayName("유저의 댓글을 가져오는 api가 정상적으로 응답하는지에 대한 테스트- 유저 관련 오류")
     @ParameterizedTest
-    @ValueSource(strings = ["3", "none"])
+    @ValueSource(strings = ["3", "none", "-1", ";ret89;"])
     @WithCustomMockUser
     fun getCommentsFailureByUserTest(text: String) {
         mvc.perform(get("/user/${text}/comments")

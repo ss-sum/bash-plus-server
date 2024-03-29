@@ -42,5 +42,7 @@ class InterestRepositoryTest {
     fun findAllByUsersUidTest() {
         val interests = interestRepository.findAllByUsersUid(user.uid!!)
         assert(interests.isNotEmpty())
+        assert(interests.get(0).category.category.equals("spring") && interests.get(0).category.level == 1)
+        assert(interests.get(0).users.uid!!.equals(user.uid!!))
     }
 }

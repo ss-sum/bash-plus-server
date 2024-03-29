@@ -32,6 +32,7 @@ class UsersRepositoryTest {
     fun findByIdAndTypeSuccessTest() {
         var result = usersRepository.findByIdAndType("user", "google")
         assert(result.isPresent)
+        assert(result.get().id.equals("user") && result.get().type.equals("google"))
     }
 
     @DisplayName("존재하지 않는 회원 정보(id, type)값에 대한 반환값 테스트")
@@ -48,6 +49,7 @@ class UsersRepositoryTest {
     fun findByUidSuccessTest() {
         var result = usersRepository.findByUid(user.uid!!)
         assert(result.isPresent)
+        assert(result.get().id.equals(user.id))
     }
 
     @DisplayName("존재하지 않는 회원 정보(uid)값에 대한 반환값 테스트")
