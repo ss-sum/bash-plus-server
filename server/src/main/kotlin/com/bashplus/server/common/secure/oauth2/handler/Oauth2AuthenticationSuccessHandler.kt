@@ -23,7 +23,10 @@ class Oauth2AuthenticationSuccessHandler @Autowired constructor(private val toke
         try {
             val accessToken = tokenProvider.createToken(authentication!!)
             usersRepository.updateToken(user?.id!!, user?.platform!!, accessToken, user.token)
-            response?.addCookie(Cookie("Authorization", accessToken))
+            val cookie = Cookie("Authorization", accessToken)
+            cookie.secure = true
+            cookie.isHttpOnly = true
+            response?.addCookie(cookie)
             val requestDispatcher = request?.getRequestDispatcher("/auth/authorization/${user.platform}")
             requestDispatcher?.forward(request, response)
         } catch (e: Exception) {
