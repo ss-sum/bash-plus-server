@@ -1,5 +1,6 @@
 package com.bashplus.server.users.service
 
+import com.bashplus.server.common.exception.ApiException
 import com.bashplus.server.host.domain.Conference
 import com.bashplus.server.host.repository.ConferenceRepository
 import com.bashplus.server.information.domain.Category
@@ -13,11 +14,10 @@ import com.bashplus.server.video.domain.Comment
 import com.bashplus.server.video.domain.Video
 import com.bashplus.server.video.repository.CommentRepository
 import com.bashplus.server.video.repository.VideoRepository
-import org.junit.jupiter.api.AfterAll
+import org.junit.jupiter.api.*
 import org.junit.jupiter.api.Assertions.*
-import org.junit.jupiter.api.BeforeAll
-import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.TestInstance
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.ValueSource
 import org.mockito.MockitoAnnotations
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
@@ -72,23 +72,48 @@ internal class UserServiceTest {
         categoryRepository.deleteAll()
     }
 
+    @DisplayName("유저의 흥미 카테고리를 설정하는 함수 정상 동작에 대한 테스트")
     @Test
-    fun setInterestingCategory() {
-        val user = usersRepository.findByUid(user.uid!!)
-        if (user.isPresent) {
-            val request = arrayListOf(InterestRequestDTO("spring", 1))
-            val category = categoryRepository.findByCategoryAndLevel("spring", 1)
-            userService.setInterestingCategory(user.get().uid!!, request)
-            val interest = interestRepository.findAllByUsersUid(user.get().uid!!)
-            assertEquals(category.get().category, interest.get(0).category.category)
-            assertEquals(category.get().level, interest.get(0).category.level)
-        }
+    fun setInterestingCategorySuccessTest() {
+        val request = arrayListOf(InterestRequestDTO("spring", 1))
+        val category = categoryRepository.findByCategoryAndLevel("spring", 1)
+        userService.setInterestingCategory(user.uid!!, request)
+        val interest = interestRepository.findAllByUsersUid(user.uid!!)
+        assertEquals(category.get().category, interest.get(0).category.category)
+        assertEquals(category.get().level, interest.get(0).category.level)
     }
 
+    @DisplayName("유저의 흥미 카테고리를 설정하는 함수 정상적 오류 응답에 대한 테스트 - 카테고리 관련 오류")
+    @ParameterizedTest
+    @ValueSource(strings = ["spring:2", "springu:1"])
+    fun setInterestingCategoryFailureByCategoryTest(text: String) {
+        val inputs = text.split(":")
+        val request = arrayListOf(InterestRequestDTO(inputs.get(0), Integer.parseInt(inputs.get(1))))
+        assertThrows<ApiException> { userService.setInterestingCategory(user.uid!!, request) }
+    }
+
+    @DisplayName("유저의 흥미 카테고리를 설정하는 함수 정상적 오류 응답에 대한 테스트 - 유저 관련 오류")
+    @ParameterizedTest
+    @ValueSource(longs = [2])
+    fun setInterestingFailureByUserCategoryTest(input: Long) {
+        val request = arrayListOf(InterestRequestDTO("spring", 1))
+        val category = categoryRepository.findByCategoryAndLevel("spring", 1)
+        assertThrows<ApiException> { userService.setInterestingCategory(input, request) }
+    }
+
+    @DisplayName("유저의 댓글 목록을 확인하는 함수 정상 동작에 대한 테스트")
     @Test
-    fun getComments() {
+    fun getCommentsSuccessTest() {
         val comments = userService.getComments(user.uid!!)
         assertEquals(1, comments.size)
         assertEquals("test", comments[0].content)
     }
+
+    @DisplayName("유저의 댓글 목록을 확인하는 함수 정상 동작에 대한 테스트")
+    @ParameterizedTest
+    @ValueSource(longs = [2])
+    fun getComments(input: Long) {
+        assertThrows<ApiException> { userService.getComments(input) }
+    }
+
 }
