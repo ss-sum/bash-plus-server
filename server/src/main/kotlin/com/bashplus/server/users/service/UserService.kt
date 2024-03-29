@@ -1,5 +1,7 @@
 package com.bashplus.server.users.service
 
+import com.bashplus.server.common.exception.ApiException
+import com.bashplus.server.common.exception.ExceptionEnum
 import com.bashplus.server.information.repository.CategoryRepository
 import com.bashplus.server.users.domain.Interest
 import com.bashplus.server.users.dto.InterestRequestDTO
@@ -31,12 +33,21 @@ class UserService {
                 val category = categoryRepository.findByCategoryAndLevel(interest.category, interest.level)
                 if (category.isPresent) {
                     interestRepository.save(Interest(user.get(), category.get()))
+                } else {
+                    throw ApiException(ExceptionEnum.BAD_REQUEST)
                 }
             }
+        } else {
+            throw ApiException(ExceptionEnum.BAD_REQUEST)
         }
     }
 
     fun getComments(userId: Long): List<CommentDTO> {
-        return commentRepository.findAllByUserUid(userId).map { comment -> CommentDTO(comment) }
+        val user = usersRepository.findByUid(userId)
+        if (user.isPresent()) {
+            return commentRepository.findAllByUserUid(userId).map { comment -> CommentDTO(comment) }
+        } else {
+            throw ApiException(ExceptionEnum.BAD_REQUEST)
+        }
     }
 }

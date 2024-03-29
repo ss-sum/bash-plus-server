@@ -6,4 +6,5 @@ import org.springframework.stereotype.Repository
 
 @Repository
 open interface InterestRepository : JpaRepository<Interest, String> {
+    public fun findAllByUsersUid(uid: Long): List<Interest>
 }
