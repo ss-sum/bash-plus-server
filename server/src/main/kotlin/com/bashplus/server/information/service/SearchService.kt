@@ -28,8 +28,8 @@ class SearchService {
     @Autowired
     private lateinit var categoryRepository: CategoryRepository
 
-    fun getAllVideos(page: Pageable): List<VideoInformationDTO> {
-        val result = videoRepository.findAll(page).toList().map { video -> VideoInformationDTO(video) }
+    fun getAllVideosByConference(keyword: String, page: Pageable): List<VideoInformationDTO> {
+        val result = videoRepository.findAllByConferenceTitle(page).toList().map { video -> VideoInformationDTO(video) }
         return result
     }
 

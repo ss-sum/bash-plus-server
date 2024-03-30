@@ -25,7 +25,12 @@ class ArchiveService {
     private lateinit var videoRepository: VideoRepository
 
     fun getVideoWatchRecords(userId: Long, page: Pageable): List<ArchiveVideoWatchRecordDTO> {
-        return archiveRepository.findAllByUserUid(userId, page).toList().map { archive -> ArchiveVideoWatchRecordDTO(archive) }
+        val user = usersRepository.findByUid(userId)
+        if (!user.isPresent) {
+            throw ApiException(ExceptionEnum.BAD_REQUEST)
+        } else {
+            return archiveRepository.findAllByUserUid(userId, page).toList().map { archive -> ArchiveVideoWatchRecordDTO(archive) }
+        }
     }
 
     fun registerArchiveLastVideo(archiveVideoRequestDTO: ArchiveVideoRequestDTO) {
@@ -45,7 +50,12 @@ class ArchiveService {
     }
 
     fun getLastVideos(userId: Long, page: Pageable): List<ArchiveVideoDTO> {
-        return archiveRepository.findAllByUserUidAndLastIsTrue(userId, page).toList().map { archive -> ArchiveVideoDTO(archive) }
+        val user = usersRepository.findByUid(userId)
+        if (!user.isPresent) {
+            throw ApiException(ExceptionEnum.BAD_REQUEST)
+        } else {
+            return archiveRepository.findAllByUserUidAndLastIsTrue(userId, page).toList().map { archive -> ArchiveVideoDTO(archive) }
+        }
     }
 
     fun registerArchiveLikeVideo(archiveVideoRequestDTO: ArchiveVideoRequestDTO) {
@@ -64,7 +74,12 @@ class ArchiveService {
     }
 
     fun getLikeVideos(userId: Long, page: Pageable): List<ArchiveVideoDTO> {
-        return archiveRepository.findAllByUserUidAndLikesIsTrue(userId, page).toList().map { archive -> ArchiveVideoDTO(archive) }
+        val user = usersRepository.findByUid(userId)
+        if (!user.isPresent) {
+            throw ApiException(ExceptionEnum.BAD_REQUEST)
+        } else {
+            return archiveRepository.findAllByUserUidAndLikesIsTrue(userId, page).toList().map { archive -> ArchiveVideoDTO(archive) }
+        }
     }
 
     fun registerArchiveTimeStamp(archiveVideoRequestDTO: ArchiveVideoRequestDTO) {
