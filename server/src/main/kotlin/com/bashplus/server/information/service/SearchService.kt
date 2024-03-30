@@ -8,6 +8,7 @@ import com.bashplus.server.information.dto.VideoInformationDTO
 import com.bashplus.server.information.repository.CategoryRepository
 import com.bashplus.server.video.repository.VideoRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
 @Service
@@ -27,24 +28,28 @@ class SearchService {
     @Autowired
     private lateinit var categoryRepository: CategoryRepository
 
-    fun getAllVideos(): List<VideoInformationDTO> {
-        val result = videoRepository.findAll().map { video -> VideoInformationDTO(video) }
+    fun getAllVideos(page: Pageable): List<VideoInformationDTO> {
+        val result = videoRepository.findAll(page).toList().map { video -> VideoInformationDTO(video) }
         return result
     }
 
-    fun getHostSearchResult(keyword: String): List<HostInformationDTO> {
-        val result = hostRepository.findAllByCompanyIsLike(keyword).map { host -> HostInformationDTO(host) }
+    fun getHostSearchResult(keyword: String, page: Pageable): List<HostInformationDTO> {
+        val result = hostRepository.findAllByCompanyIsLikeIgnoreCase(mappingKeyword(keyword), page).toList().map { host -> HostInformationDTO(host) }
         return result
     }
 
-    fun getCategorySearchResult(keyword: String): List<CategoryInformationDTO> {
-        val result = categoryRepository.findAllByCategoryIsLike(keyword).map { category -> CategoryInformationDTO(category) }
+    fun getCategorySearchResult(keyword: String, page: Pageable): List<CategoryInformationDTO> {
+        val result = categoryRepository.findAllByCategoryIsLikeIgnoreCase(mappingKeyword(keyword), page).toList().map { category -> CategoryInformationDTO(category) }
         return result
     }
 
-    fun getVideoSearchResult(keyword: String): List<VideoInformationDTO> {
-        val result = videoRepository.findAllByTitleIsLike(keyword).map { video -> VideoInformationDTO(video) }
+    fun getVideoSearchResult(keyword: String, page: Pageable): List<VideoInformationDTO> {
+        val result = videoRepository.findAllByTitleIsLikeIgnoreCase(mappingKeyword(keyword), page).toList().map { video -> VideoInformationDTO(video) }
         return result
+    }
+
+    private fun mappingKeyword(keyword: String): String {
+        return "%{$keyword}%"
     }
 
 
