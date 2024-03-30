@@ -10,6 +10,7 @@ import com.bashplus.server.users.repository.UsersRepository
 import com.bashplus.server.video.dto.CommentDTO
 import com.bashplus.server.video.repository.CommentRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
 @Service
@@ -42,10 +43,10 @@ class UserService {
         }
     }
 
-    fun getComments(userId: Long): List<CommentDTO> {
+    fun getComments(userId: Long, page: Pageable): List<CommentDTO> {
         val user = usersRepository.findByUid(userId)
         if (user.isPresent()) {
-            return commentRepository.findAllByUserUid(userId).map { comment -> CommentDTO(comment) }
+            return commentRepository.findAllByUserUid(userId, page).toList().map { comment -> CommentDTO(comment) }
         } else {
             throw ApiException(ExceptionEnum.BAD_REQUEST)
         }
