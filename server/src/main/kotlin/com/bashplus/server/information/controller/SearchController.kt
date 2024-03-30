@@ -16,11 +16,11 @@ class SearchController {
     @Autowired
     private lateinit var searchService: SearchService
 
-    @Operation(summary = "전체 영상 목록 조회 API", description = "")
-    @GetMapping("/conference/video")
-    fun getWholeVideos(@RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseDTO {
+    @Operation(summary = "컨퍼런스별 전체 영상 목록 조회 API", description = "")
+    @GetMapping("/conference/{keyword}/videos")
+    fun getWholeVideos(@PathVariable keyword: String, @RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseDTO {
         val pageable: Pageable = PageRequest.of(pageNum, pageSize)
-        val result = searchService.getAllVideos(pageable)
+        val result = searchService.getAllVideosByConference(keyword, pageable)
         return ResponseDTO(result)
     }
 
