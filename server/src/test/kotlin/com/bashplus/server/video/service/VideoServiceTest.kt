@@ -89,7 +89,7 @@ internal class VideoServiceTest {
     fun getVideoInfoSuccessTest() {
         val videoDTO: VideoDTO = videoService.getVideoInfo(video.vid!!)
         assertEquals(videoDTO.title, video.title)
-        assertEquals(videoDTO.category, videoTagRepository.findTagByVid(video.vid!!).get(0).get(0))
+        assertEquals(videoDTO.category, videoTagRepository.findTagByVid(video.vid!!).get(0))
     }
 
     @DisplayName("비디오 정보를 가져오는 함수 비디오가 없을 때 예외처리 테스트")

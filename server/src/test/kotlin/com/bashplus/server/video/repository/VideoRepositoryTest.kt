@@ -32,12 +32,6 @@ internal class VideoRepositoryTest {
         video = videoRepository.save(Video(conference, "description", "url", "thumbnail"))
     }
 
-    @AfterAll
-    fun tearDown() {
-        videoRepository.delete(video)
-        conferenceRepository.delete(conference)
-    }
-
     @DisplayName("존재하는 비디오 정보(vid)값에 대한 정상 응답 테스트")
     @Test
     fun findByVidSuccessTest() {
