@@ -1,12 +1,12 @@
 package com.bashplus.server.video.dto
 
+import org.springframework.format.annotation.DateTimeFormat
 import java.time.LocalTime
 
 class WatchRequestDTO {
     var uid: Long = 0
-        private set
     var vid: Long = 0
-        private set
+
+    @DateTimeFormat(pattern = "HH:mm:ss")
     var time: LocalTime = LocalTime.now()
-        private set
 }

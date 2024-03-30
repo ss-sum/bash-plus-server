@@ -9,5 +9,5 @@ import org.springframework.stereotype.Repository
 @Repository
 open interface CommentRepository : JpaRepository<Comment, String> {
     open fun findAllByUserUid(uid: Long, pageable: Pageable): Page<Comment>
-    open fun findAllByVideoVid(vide: Long): ArrayList<Comment>
+    open fun findAllByVideoVid(vide: Long, pageable: Pageable): Page<Comment>
 }
