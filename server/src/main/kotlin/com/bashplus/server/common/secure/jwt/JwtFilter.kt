@@ -1,5 +1,6 @@
 package com.bashplus.server.common.secure.jwt
 
+import com.auth0.jwt.JWT
 import jakarta.servlet.FilterChain
 import jakarta.servlet.ServletRequest
 import jakarta.servlet.ServletResponse
@@ -18,6 +19,7 @@ class JwtFilter(private val tokenProvider: TokenProvider) : GenericFilterBean() 
         if (StringUtils.hasText(jwt) && tokenProvider.validateToken(jwt!!)) {
             val authentication: Authentication = tokenProvider.getAuthentication(jwt)
             SecurityContextHolder.getContext().authentication = authentication
+            request.setAttribute("userId", JWT.decode(jwt).subject.toLong())
         }
 
         chain?.doFilter(request, response)
@@ -29,6 +31,5 @@ class JwtFilter(private val tokenProvider: TokenProvider) : GenericFilterBean() 
             return bearerToken.substring(7)
         }
         return null;
-
     }
 }
