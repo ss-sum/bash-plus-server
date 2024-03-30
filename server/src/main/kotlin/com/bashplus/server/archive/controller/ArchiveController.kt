@@ -1,6 +1,5 @@
 package com.bashplus.server.archive.controller
 
-import com.auth0.jwt.JWT
 import com.bashplus.server.archive.dto.ArchiveVideoRequestDTO
 import com.bashplus.server.archive.service.ArchiveService
 import com.bashplus.server.common.ResponseDTO
@@ -24,7 +23,7 @@ class ArchiveController {
     @Operation(summary = "영상 시청 기록 목록 조회 API", description = "")
     @GetMapping("/videos")
     fun getWatchedVideos(request: HttpServletRequest, @RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseDTO {
-        val userId = JWT.decode(request.getHeader("Authorization")).subject.toLong()
+        val userId = request.getAttribute("userId").toString().toLong()
         val pageable: Pageable = PageRequest.of(pageNum, pageSize)
         val result = archiveService.getVideoWatchRecords(userId, pageable)
         return ResponseDTO(result)
@@ -33,7 +32,7 @@ class ArchiveController {
     @Operation(summary = "나중에 볼 영상 등록 API", description = "")
     @PostMapping("/last/video")
     fun addVideo(@RequestBody archiveVideoRequestDTO: ArchiveVideoRequestDTO, request: HttpServletRequest): ResponseDTO {
-        val userId = JWT.decode(request.getHeader("Authorization")).subject.toLong()
+        val userId = request.getAttribute("userId").toString().toLong()
         archiveVideoRequestDTO.uid = userId
         archiveService.registerArchiveLastVideo(archiveVideoRequestDTO)
         return ResponseDTO(HttpStatus.OK.reasonPhrase)
@@ -42,7 +41,7 @@ class ArchiveController {
     @Operation(summary = "나중에 볼 영상 목록 조회 API", description = "")
     @GetMapping("/last/videos")
     fun getLikedVideos(request: HttpServletRequest, @RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseDTO {
-        val userId = JWT.decode(request.getHeader("Authorization")).subject.toLong()
+        val userId = request.getAttribute("userId").toString().toLong()
         val pageable: Pageable = PageRequest.of(pageNum, pageSize)
         val result = archiveService.getLastVideos(userId, pageable)
         return ResponseDTO(result)
@@ -52,7 +51,7 @@ class ArchiveController {
     @Operation(summary = "타임스탬프 등록 API", description = "")
     @PostMapping("/time")
     fun stampCurrentTime(@RequestBody archiveVideoRequestDTO: ArchiveVideoRequestDTO, request: HttpServletRequest): ResponseDTO {
-        val userId = JWT.decode(request.getHeader("Authorization")).subject.toLong()
+        val userId = request.getAttribute("userId").toString().toLong()
         archiveVideoRequestDTO.uid = userId
         return ResponseDTO(HttpStatus.OK.reasonPhrase)
     }
@@ -60,7 +59,7 @@ class ArchiveController {
     @Operation(summary = "좋아요한 영상 목록 조회 API", description = "")
     @GetMapping("/like/videos")
     fun getArchivedVideos(request: HttpServletRequest, @RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseDTO {
-        val userId = JWT.decode(request.getHeader("Authorization")).subject.toLong()
+        val userId = request.getAttribute("userId").toString().toLong()
         val pageable: Pageable = PageRequest.of(pageNum, pageSize)
         val result = archiveService.getLikeVideos(userId, pageable)
         return ResponseDTO(result)
@@ -69,7 +68,7 @@ class ArchiveController {
     @Operation(summary = "비디오 좋아요 등록 API", description = "")
     @PostMapping("/like/video")
     fun stampLikeOnVideo(@RequestBody archiveVideoRequestDTO: ArchiveVideoRequestDTO, request: HttpServletRequest): ResponseDTO {
-        val userId = JWT.decode(request.getHeader("Authorization")).subject.toLong()
+        val userId = request.getAttribute("userId").toString().toLong()
         archiveVideoRequestDTO.uid = userId
         archiveService.registerArchiveLikeVideo(archiveVideoRequestDTO)
         return ResponseDTO(HttpStatus.OK.reasonPhrase)
