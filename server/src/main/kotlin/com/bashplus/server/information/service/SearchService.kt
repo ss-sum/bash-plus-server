@@ -29,7 +29,7 @@ class SearchService {
     private lateinit var categoryRepository: CategoryRepository
 
     fun getAllVideosByConference(keyword: String, page: Pageable): List<VideoInformationDTO> {
-        val result = videoRepository.findAllByConferenceTitle(page).toList().map { video -> VideoInformationDTO(video) }
+        val result = videoRepository.findAllByConferenceTitle(keyword, page).toList().map { video -> VideoInformationDTO(video) }
         return result
     }
 
@@ -49,7 +49,7 @@ class SearchService {
     }
 
     private fun mappingKeyword(keyword: String): String {
-        return "%{$keyword}%"
+        return "%$keyword%"
     }
 
 

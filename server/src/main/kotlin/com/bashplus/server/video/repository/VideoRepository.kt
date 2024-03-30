@@ -10,6 +10,6 @@ import java.util.*
 @Repository
 open interface VideoRepository : JpaRepository<Video, String> {
     open fun findByVid(vid: Long): Optional<Video>
-    open fun findAllByConferenceTitle(pageable: Pageable): Page<Video>
+    open fun findAllByConferenceTitle(title: String, pageable: Pageable): Page<Video>
     open fun findAllByTitleIsLikeIgnoreCase(title: String, pageable: Pageable): Page<Video>
 }
