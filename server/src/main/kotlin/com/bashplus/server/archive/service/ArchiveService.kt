@@ -10,6 +10,7 @@ import com.bashplus.server.common.exception.ExceptionEnum
 import com.bashplus.server.users.repository.UsersRepository
 import com.bashplus.server.video.repository.VideoRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
 @Service
@@ -23,8 +24,8 @@ class ArchiveService {
     @Autowired
     private lateinit var videoRepository: VideoRepository
 
-    fun getVideoWatchRecords(userId: Long): List<ArchiveVideoWatchRecordDTO> {
-        return archiveRepository.findAllByUserUid(userId).map { archive -> ArchiveVideoWatchRecordDTO(archive) }
+    fun getVideoWatchRecords(userId: Long, page: Pageable): List<ArchiveVideoWatchRecordDTO> {
+        return archiveRepository.findAllByUserUid(userId, page).toList().map { archive -> ArchiveVideoWatchRecordDTO(archive) }
     }
 
     fun registerArchiveLastVideo(archiveVideoRequestDTO: ArchiveVideoRequestDTO) {
@@ -43,14 +44,14 @@ class ArchiveService {
         }
     }
 
-    fun getLastVideos(userId: Long): List<ArchiveVideoDTO> {
-        return archiveRepository.findByUserUidAndLastIsTrue(userId).map { archive -> ArchiveVideoDTO(archive) }
+    fun getLastVideos(userId: Long, page: Pageable): List<ArchiveVideoDTO> {
+        return archiveRepository.findAllByUserUidAndLastIsTrue(userId, page).toList().map { archive -> ArchiveVideoDTO(archive) }
     }
 
     fun registerArchiveLikeVideo(archiveVideoRequestDTO: ArchiveVideoRequestDTO) {
         val result = archiveRepository.findByUserUidAndVideoVid(archiveVideoRequestDTO.uid, archiveVideoRequestDTO.vid)
         if (result.isPresent) {
-            archiveRepository.updateArchiveLast(result.get().uidvid ?: 0, !result.get().likes)
+            archiveRepository.updateArchiveLiked(result.get().uidvid ?: 0, !result.get().likes)
         } else {
             val user = usersRepository.findByUid(archiveVideoRequestDTO.uid)
             var video = videoRepository.findByVid(archiveVideoRequestDTO.vid)
@@ -62,8 +63,8 @@ class ArchiveService {
         }
     }
 
-    fun getLikeVideos(userId: Long): List<ArchiveVideoDTO> {
-        return archiveRepository.findByUserUidAndLikesIsTrue(userId).map { archive -> ArchiveVideoDTO(archive) }
+    fun getLikeVideos(userId: Long, page: Pageable): List<ArchiveVideoDTO> {
+        return archiveRepository.findAllByUserUidAndLikesIsTrue(userId, page).toList().map { archive -> ArchiveVideoDTO(archive) }
     }
 
     fun registerArchiveTimeStamp(archiveVideoRequestDTO: ArchiveVideoRequestDTO) {
