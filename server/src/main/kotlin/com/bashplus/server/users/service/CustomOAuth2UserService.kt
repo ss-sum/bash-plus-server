@@ -30,16 +30,21 @@ class CustomOAuth2UserService : DefaultOAuth2UserService() {
         if (attributes.isNullOrEmpty() || userRequest == null) {
             throw ApiException(ExceptionEnum.BAD_REQUEST)
         }
-        val customOAuth2User = OAuth2UserDTO(attributes!!, userRequest!!)
-        val user: Optional<Users> = usersRepository.findByIdAndType(customOAuth2User.id, customOAuth2User.platform)
-        if (!user.isPresent) {
-            join(customOAuth2User)
-        }
+        var customOAuth2User = OAuth2UserDTO(attributes!!, userRequest!!)
+        var user = joinOrUpdate(customOAuth2User)
+        customOAuth2User.uid = user.uid!!
         return customOAuth2User
     }
 
-    private fun join(authUser: OAuth2UserDTO): Unit {
-        usersRepository.save(Users(authUser.id, authUser.platform, authUser.name, null, null, authUser.email))
+    private fun joinOrUpdate(authUser: OAuth2UserDTO): Users {
+        var user: Optional<Users> = usersRepository.findByIdAndType(authUser.id, authUser.platform)
+        if (!user.isPresent) {
+            return usersRepository.save(Users(authUser.id, authUser.platform, authUser.name, authUser.accessToken, authUser.refreshToken, authUser.email))
+        } else {
+            usersRepository.updateToken(user.get().id, user.get().type, authUser.accessToken, authUser.refreshToken
+                    ?: "")
+            return user.get()
+        }
     }
 
 }
