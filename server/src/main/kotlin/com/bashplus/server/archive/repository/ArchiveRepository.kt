@@ -1,6 +1,8 @@
 package com.bashplus.server.archive.repository
 
 import com.bashplus.server.archive.domain.Archive
+import org.springframework.data.domain.Page
+import org.springframework.data.domain.Pageable
 import org.springframework.data.jpa.repository.JpaRepository
 import org.springframework.data.jpa.repository.Modifying
 import org.springframework.data.jpa.repository.Query
@@ -13,9 +15,9 @@ import java.util.*
 @Repository
 open interface ArchiveRepository : JpaRepository<Archive, String> {
     open fun findByUserUidAndVideoVid(uid: Long, vid: Long): Optional<Archive>
-    open fun findAllByUserUid(uid: Long): List<Archive>
-    open fun findByUserUidAndLastIsTrue(uid: Long): List<Archive>
-    open fun findByUserUidAndLikesIsTrue(uid: Long): List<Archive>
+    open fun findAllByUserUid(uid: Long, pageable: Pageable): Page<Archive>
+    open fun findAllByUserUidAndLastIsTrue(uid: Long, pageable: Pageable): Page<Archive>
+    open fun findAllByUserUidAndLikesIsTrue(uid: Long, pageable: Pageable): Page<Archive>
 
     @Transactional
     @Modifying
@@ -31,5 +33,5 @@ open interface ArchiveRepository : JpaRepository<Archive, String> {
     @Transactional
     @Modifying
     @Query("UPDATE Archive a SET a.likes = :like WHERE a.uidvid= :id")
-    open fun updateArchiveLikd(@Param("id") uidvid: Long, @Param("like") like: Boolean)
+    open fun updateArchiveLiked(@Param("id") uidvid: Long, @Param("like") like: Boolean)
 }
