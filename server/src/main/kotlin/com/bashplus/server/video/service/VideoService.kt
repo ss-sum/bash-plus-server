@@ -35,7 +35,7 @@ class VideoService {
     private lateinit var archiveRepository: ArchiveRepository
 
     fun getAllVideos(page: Pageable): List<VideoDTO> {
-        return videoRepository.findAllByConferenceTitle(page).toList().map { video ->
+        return videoRepository.findAll(page).toList().map { video ->
             val videoTag = videoTagRepository.findTagByVid(video.vid!!)
             VideoDTO(video, videoTag)
         }
