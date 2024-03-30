@@ -14,6 +14,7 @@ import com.bashplus.server.video.repository.CommentRepository
 import com.bashplus.server.video.repository.VideoRepository
 import com.bashplus.server.video.repository.VideoTagRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
 @Service
@@ -43,8 +44,13 @@ class VideoService {
         }
     }
 
-    fun getVideoCommentInfo(videoId: Long): List<CommentDTO> {
-        return commentRepository.findAllByVideoVid(videoId).map { comment -> CommentDTO(comment) }
+    fun getVideoCommentInfo(videoId: Long, page: Pageable): List<CommentDTO> {
+        val video = videoRepository.findByVid(videoId)
+        if (video.isPresent) {
+            return commentRepository.findAllByVideoVid(videoId, page).toList().map { comment -> CommentDTO(comment) }
+        } else {
+            throw ApiException(ExceptionEnum.BAD_REQUEST)
+        }
     }
 
     fun writeComment(request: CommentRequestDTO) {
