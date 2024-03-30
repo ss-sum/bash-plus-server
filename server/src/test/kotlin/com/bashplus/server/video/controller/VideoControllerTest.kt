@@ -93,7 +93,7 @@ internal class VideoControllerTest {
     @ParameterizedTest
     @ValueSource(strings = ["-1", "2", "lskf"])
     @WithCustomMockUser
-    fun getVideoFailTest(vid: String) {
+    fun getVideoFailureByVidTest(vid: String) {
         mvc.perform(get("/video/$vid")
                 .header("Authorization", "Bearer "))
                 .andExpect(status().isBadRequest)
@@ -115,7 +115,7 @@ internal class VideoControllerTest {
     @ParameterizedTest
     @ValueSource(strings = ["-1", "2", "lskf"])
     @WithCustomMockUser
-    fun getVideoCommentFailTest(vid: String) {
+    fun getVideoCommentFailureByVidTest(vid: String) {
         mvc.perform(get("/video/${vid}/comments")
                 .header("Authorization", "Bearer "))
                 .andExpect(status().isBadRequest)
@@ -142,7 +142,7 @@ internal class VideoControllerTest {
     @ParameterizedTest
     @ValueSource(strings = ["-1", "2", "lskf"])
     @WithCustomMockUser
-    fun writeCommentFailTest(vid: String) {
+    fun writeCommentFailureByVidTest(vid: String) {
         val objectMapper: ObjectMapper = ObjectMapper()
         val request: MutableMap<String, String> = HashMap()
         request["content"] = "test"
@@ -175,7 +175,7 @@ internal class VideoControllerTest {
     @ParameterizedTest
     @ValueSource(strings = ["-1", "2", "lskf"])
     @WithCustomMockUser
-    fun updateWatchRecordFailTest(vid: String) {
+    fun updateWatchRecordFailureByVidTest(vid: String) {
         val objectMapper: ObjectMapper = ObjectMapper()
         val request: MutableMap<String, String> = HashMap()
         request["time"] = "10:00:00"
