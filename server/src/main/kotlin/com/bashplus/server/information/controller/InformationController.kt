@@ -25,7 +25,7 @@ class InformationController {
     }
 
     @Operation(summary = "카테고리 목록 API", description = "검색 시 선택지 제공을 위한 목록 API")
-    @GetMapping("/conference/categorys")
+    @GetMapping("/conference/categories")
     fun getCategory(@RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseDTO {
         val pageable: Pageable = PageRequest.of(pageNum, pageSize)
         val result = informationService.getCategories(pageable)
