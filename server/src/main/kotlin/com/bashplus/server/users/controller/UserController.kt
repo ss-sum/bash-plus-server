@@ -7,12 +7,13 @@ import com.bashplus.server.users.dto.InterestRequestDTO
 import com.bashplus.server.users.service.UserService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
-import jakarta.servlet.http.HttpServletRequest
 import org.jetbrains.annotations.NotNull
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
+import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.core.userdetails.User
 import org.springframework.web.bind.annotation.*
 
 @Tag(name = "회원 세팅 API", description = "회원 세팅 - 마이 페이지 관련 API, 조회 및 업데이트")
@@ -26,8 +27,8 @@ class UserController {
 
     @Operation(summary = "관심분야 설정 API", description = "")
     @PostMapping("/interesting")
-    fun setInterestingCategory(@NotNull @RequestBody interestRequest: Map<String, ArrayList<InterestRequestDTO>>, request: HttpServletRequest): ResponseDTO {
-        val userId = request.getAttribute("userId").toString().toLong()
+    fun setInterestingCategory(@NotNull @RequestBody interestRequest: Map<String, ArrayList<InterestRequestDTO>>): ResponseDTO {
+        val userId = (SecurityContextHolder.getContext().authentication.principal as User).username.toLong()
         val paramList: ArrayList<InterestRequestDTO>? = interestRequest["param"]
         if (!paramList.isNullOrEmpty()) {
             userService.setInterestingCategory(userId, paramList)
@@ -39,8 +40,8 @@ class UserController {
 
     @Operation(summary = "댓글 기록 조회 API", description = "")
     @GetMapping("/comments")
-    fun getComments(request: HttpServletRequest, @RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseDTO {
-        val userId = request.getAttribute("userId").toString().toLong()
+    fun getComments(@RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseDTO {
+        val userId = (SecurityContextHolder.getContext().authentication.principal as User).username.toLong()
         val pageable: Pageable = PageRequest.of(pageNum, pageSize)
         val commentLists = userService.getComments(userId, pageable)
         return ResponseDTO(commentLists)
