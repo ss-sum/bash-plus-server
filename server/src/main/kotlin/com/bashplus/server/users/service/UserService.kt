@@ -28,27 +28,18 @@ class UserService {
     private lateinit var commentRepository: CommentRepository
 
     fun setInterestingCategory(userId: Long, request: ArrayList<InterestRequestDTO>) {
-        val user = usersRepository.findByUid(userId)
-        if (user.isPresent) {
-            for (interest in request) {
-                val category = categoryRepository.findByCategoryAndLevel(interest.category, interest.level)
-                if (category.isPresent) {
-                    interestRepository.save(Interest(user.get(), category.get()))
-                } else {
-                    throw ApiException(ExceptionEnum.BAD_REQUEST)
-                }
+        val user = usersRepository.findByUid(userId).get()
+        for (interest in request) {
+            val category = categoryRepository.findByCategoryAndLevel(interest.category, interest.level)
+            if (category.isPresent) {
+                interestRepository.save(Interest(user, category.get()))
+            } else {
+                throw ApiException(ExceptionEnum.BAD_REQUEST)
             }
-        } else {
-            throw ApiException(ExceptionEnum.BAD_REQUEST)
         }
     }
 
     fun getComments(userId: Long, page: Pageable): List<CommentDTO> {
-        val user = usersRepository.findByUid(userId)
-        if (user.isPresent()) {
-            return commentRepository.findAllByUserUid(userId, page).toList().map { comment -> CommentDTO(comment) }
-        } else {
-            throw ApiException(ExceptionEnum.BAD_REQUEST)
-        }
+        return commentRepository.findAllByUserUid(userId, page).toList().map { comment -> CommentDTO(comment) }
     }
 }
