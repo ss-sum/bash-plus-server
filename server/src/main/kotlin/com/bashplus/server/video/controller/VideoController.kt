@@ -6,12 +6,13 @@ import com.bashplus.server.video.dto.WatchRequestDTO
 import com.bashplus.server.video.service.VideoService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
-import jakarta.servlet.http.HttpServletRequest
 import org.jetbrains.annotations.NotNull
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.data.domain.PageRequest
 import org.springframework.data.domain.Pageable
 import org.springframework.http.HttpStatus
+import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.core.userdetails.User
 import org.springframework.web.bind.annotation.*
 
 @Tag(name = "비디오 API", description = "컨퍼런스 영상 관련 API")
@@ -47,8 +48,8 @@ class VideoController {
 
     @Operation(summary = "영상 댓글 등록 API", description = "")
     @PostMapping("/comment")
-    fun writeComment(@NotNull @RequestBody commentRequest: CommentRequestDTO, request: HttpServletRequest): ResponseDTO {
-        val userId = request.getAttribute("userId").toString().toLong()
+    fun writeComment(@NotNull @RequestBody commentRequest: CommentRequestDTO): ResponseDTO {
+        val userId = (SecurityContextHolder.getContext().authentication.principal as User).username.toLong()
         commentRequest.uid = userId
         videoService.writeComment(commentRequest)
         return ResponseDTO(HttpStatus.OK.reasonPhrase)
@@ -56,8 +57,8 @@ class VideoController {
 
     @Operation(summary = "영상 시청 기록 API", description = "영상 시청 시작, 종료 등 기록을 위한 API")
     @PostMapping("/watch")
-    fun watchVideo(@NotNull @RequestBody watchRequest: WatchRequestDTO, request: HttpServletRequest): ResponseDTO {
-        val userId = request.getAttribute("userId").toString().toLong()
+    fun watchVideo(@NotNull @RequestBody watchRequest: WatchRequestDTO): ResponseDTO {
+        val userId = (SecurityContextHolder.getContext().authentication.principal as User).username.toLong()
         watchRequest.uid = userId
         videoService.updateWatchRecord(watchRequest)
         return ResponseDTO(HttpStatus.OK.reasonPhrase)
