@@ -51,7 +51,7 @@ class TokenProvider : InitializingBean {
                 .claims
         val authorities = claims[AUTHORITIES_KEY]?.asString()!!.split(",")
                 .map { SimpleGrantedAuthority(it) }.toList()
-        val principal = User(claims.get("subject").toString(), "", authorities)
+        val principal = User(claims.get("sub")!!.asString(), "", authorities)
         return UsernamePasswordAuthenticationToken(principal, token, authorities)
 
     }
