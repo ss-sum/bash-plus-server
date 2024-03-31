@@ -32,7 +32,9 @@ class AuthController {
         var cookie: Array<out Cookie>? = request.getCookies()
         if (cookie != null) {
             for (c in cookie) {
-                c.maxAge = 0
+                if (c.name.equals("Authorization")) {
+                    c.maxAge = 0
+                }
             }
         }
         return ResponseDTO(HttpStatus.OK.reasonPhrase)
