@@ -30,12 +30,12 @@ class ArchiveController {
     }
 
     @Operation(summary = "나중에 볼 영상 등록 API", description = "")
-    @PostMapping("/last/video")
+    @PatchMapping("/last/video")
     fun addVideo(@RequestBody archiveVideoRequestDTO: ArchiveVideoRequestDTO, request: HttpServletRequest): ResponseDTO {
         val userId = request.getAttribute("userId").toString().toLong()
         archiveVideoRequestDTO.uid = userId
-        archiveService.registerArchiveLastVideo(archiveVideoRequestDTO)
-        return ResponseDTO(HttpStatus.OK.reasonPhrase)
+        archiveService.updateArchiveLastVideo(archiveVideoRequestDTO)
+        return ResponseDTO(HttpStatus.CREATED.reasonPhrase)
     }
 
     @Operation(summary = "나중에 볼 영상 목록 조회 API", description = "")
@@ -53,7 +53,7 @@ class ArchiveController {
     fun stampCurrentTime(@RequestBody archiveVideoRequestDTO: ArchiveVideoRequestDTO, request: HttpServletRequest): ResponseDTO {
         val userId = request.getAttribute("userId").toString().toLong()
         archiveVideoRequestDTO.uid = userId
-        return ResponseDTO(HttpStatus.OK.reasonPhrase)
+        return ResponseDTO(HttpStatus.CREATED.reasonPhrase)
     }
 
     @Operation(summary = "좋아요한 영상 목록 조회 API", description = "")
@@ -66,12 +66,12 @@ class ArchiveController {
     }
 
     @Operation(summary = "비디오 좋아요 등록 API", description = "")
-    @PostMapping("/like/video")
-    fun stampLikeOnVideo(@RequestBody archiveVideoRequestDTO: ArchiveVideoRequestDTO, request: HttpServletRequest): ResponseDTO {
+    @PatchMapping("/like/video")
+    fun updateLikeOnVideo(@RequestBody archiveVideoRequestDTO: ArchiveVideoRequestDTO, request: HttpServletRequest): ResponseDTO {
         val userId = request.getAttribute("userId").toString().toLong()
         archiveVideoRequestDTO.uid = userId
-        archiveService.registerArchiveLikeVideo(archiveVideoRequestDTO)
-        return ResponseDTO(HttpStatus.OK.reasonPhrase)
+        archiveService.updateArchiveLikeVideo(archiveVideoRequestDTO)
+        return ResponseDTO(HttpStatus.CREATED.reasonPhrase)
     }
 
 }

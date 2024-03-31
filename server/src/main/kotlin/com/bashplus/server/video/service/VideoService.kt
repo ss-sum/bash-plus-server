@@ -47,7 +47,7 @@ class VideoService {
             val videoTag = videoTagRepository.findTagByVid(videoId)
             return VideoDTO(video.get(), videoTag)
         } else {
-            throw ApiException(ExceptionEnum.BAD_REQUEST)
+            throw ApiException(ExceptionEnum.NOT_FOUND)
         }
     }
 
@@ -56,17 +56,17 @@ class VideoService {
         if (video.isPresent) {
             return commentRepository.findAllByVideoVid(videoId, page).toList().map { comment -> CommentDTO(comment) }
         } else {
-            throw ApiException(ExceptionEnum.BAD_REQUEST)
+            throw ApiException(ExceptionEnum.NOT_FOUND)
         }
     }
 
     fun writeComment(request: CommentRequestDTO) {
-        val user = usersRepository.findByUid(request.uid)
+        val user = usersRepository.findByUid(request.uid).get()
         val video = videoRepository.findByVid(request.vid)
-        if (user.isPresent && video.isPresent) {
-            commentRepository.save(Comment(user.get(), video.get(), request.content))
+        if (video.isPresent) {
+            commentRepository.save(Comment(user, video.get(), request.content))
         } else {
-            throw ApiException(ExceptionEnum.BAD_REQUEST)
+            throw ApiException(ExceptionEnum.NOT_FOUND)
         }
     }
 
@@ -75,12 +75,12 @@ class VideoService {
         if (archive.isPresent) {
             archiveRepository.updateArchiveWatchRecord(archive.get().uidvid!!, request.time)
         } else {
-            val user = usersRepository.findByUid(request.uid)
+            val user = usersRepository.findByUid(request.uid).get()
             val video = videoRepository.findByVid(request.vid)
-            if (user.isPresent && video.isPresent) {
-                archiveRepository.save(Archive(user.get(), video.get(), request.time))
+            if (video.isPresent) {
+                archiveRepository.save(Archive(user, video.get(), request.time))
             } else {
-                throw ApiException(ExceptionEnum.BAD_REQUEST)
+                throw ApiException(ExceptionEnum.NOT_FOUND)
             }
         }
     }
