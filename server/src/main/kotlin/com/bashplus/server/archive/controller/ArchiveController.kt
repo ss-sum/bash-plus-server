@@ -50,7 +50,7 @@ class ArchiveController {
 
 
     @Operation(summary = "타임스탬프 등록 API", description = "")
-    @PostMapping("/time")
+    @PostMapping("/timestamp")
     fun stampCurrentTime(@RequestBody archiveVideoRequestDTO: ArchiveVideoRequestDTO): ResponseDTO {
         val userId = (SecurityContextHolder.getContext().authentication.principal as User).username.toLong()
         archiveVideoRequestDTO.uid = userId
