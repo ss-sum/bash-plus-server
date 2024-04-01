@@ -41,7 +41,7 @@ class ArchiveService {
             if (video.isPresent) {
                 archiveRepository.save(Archive(user, video.get(), last = true))
             } else {
-                throw ApiException(ExceptionEnum.BAD_REQUEST)
+                throw ApiException(ExceptionEnum.VIDEO_NOT_FOUND)
             }
 
         }
@@ -62,7 +62,7 @@ class ArchiveService {
             if (video.isPresent) {
                 archiveRepository.save(Archive(user, video.get(), like = true))
             } else {
-                throw ApiException(ExceptionEnum.BAD_REQUEST)
+                throw ApiException(ExceptionEnum.VIDEO_NOT_FOUND)
             }
         }
     }
