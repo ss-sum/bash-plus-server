@@ -5,15 +5,17 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.oauth2.client.userinfo.OAuth2UserRequest
 import org.springframework.security.oauth2.core.user.OAuth2User
 
-class OAuth2UserDTO private constructor(val id: String, val userName: String, val email: String, val platform: String, val token: String) : OAuth2User {
+class OAuth2UserDTO private constructor(var uid: Long, val id: String, val userName: String, val email: String, val platform: String, val accessToken: String, val refreshToken: String?) : OAuth2User {
 
     constructor(attributes: Map<String, Any>, userRequest: OAuth2UserRequest) :
             this(
+                    uid = 0,
                     id = attributes[ID_ATTRIBUTE]?.toString() ?: "",
                     userName = attributes[NAME_ATTRIBUTE]?.toString() ?: "",
                     email = attributes[EMAIL_ATTRIBUTE]?.toString() ?: "",
                     platform = userRequest.clientRegistration.registrationId ?: "",
-                    token = userRequest.accessToken.tokenValue.toString() ?: ""
+                    accessToken = userRequest.accessToken.tokenValue.toString() ?: "",
+                    refreshToken = userRequest.additionalParameters["refresh_token"]?.toString() ?: null
             )
 
 

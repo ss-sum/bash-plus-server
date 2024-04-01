@@ -19,7 +19,6 @@ class JwtFilter(private val tokenProvider: TokenProvider) : GenericFilterBean() 
             val authentication: Authentication = tokenProvider.getAuthentication(jwt)
             SecurityContextHolder.getContext().authentication = authentication
         }
-
         chain?.doFilter(request, response)
     }
 
@@ -29,6 +28,5 @@ class JwtFilter(private val tokenProvider: TokenProvider) : GenericFilterBean() 
             return bearerToken.substring(7)
         }
         return null;
-
     }
 }

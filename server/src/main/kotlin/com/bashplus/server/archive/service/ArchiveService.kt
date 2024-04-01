@@ -5,11 +5,13 @@ import com.bashplus.server.archive.dto.ArchiveVideoDTO
 import com.bashplus.server.archive.dto.ArchiveVideoRequestDTO
 import com.bashplus.server.archive.dto.ArchiveVideoWatchRecordDTO
 import com.bashplus.server.archive.repository.ArchiveRepository
+import com.bashplus.server.common.ResponseListDTO
 import com.bashplus.server.common.exception.ApiException
 import com.bashplus.server.common.exception.ExceptionEnum
 import com.bashplus.server.users.repository.UsersRepository
 import com.bashplus.server.video.repository.VideoRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
 @Service
@@ -23,47 +25,51 @@ class ArchiveService {
     @Autowired
     private lateinit var videoRepository: VideoRepository
 
-    fun getVideoWatchRecords(userId: Long): List<ArchiveVideoWatchRecordDTO> {
-        return archiveRepository.findAllByUserUid(userId).map { archive -> ArchiveVideoWatchRecordDTO(archive) }
+    fun getVideoWatchRecords(userId: Long, page: Pageable): ResponseListDTO {
+        val result = archiveRepository.findAllByUserUid(userId, page)
+        return ResponseListDTO(result.toList().map { archive -> ArchiveVideoWatchRecordDTO(archive) }, page.pageNumber, page.pageSize, result.totalElements)
+
     }
 
-    fun registerArchiveLastVideo(archiveVideoRequestDTO: ArchiveVideoRequestDTO) {
+    fun updateArchiveLastVideo(archiveVideoRequestDTO: ArchiveVideoRequestDTO) {
         val result = archiveRepository.findByUserUidAndVideoVid(archiveVideoRequestDTO.uid, archiveVideoRequestDTO.vid)
         if (result.isPresent) {
             archiveRepository.updateArchiveLast(result.get().uidvid ?: 0, !result.get().last)
         } else {
-            val user = usersRepository.findByUid(archiveVideoRequestDTO.uid)
+            val user = usersRepository.findByUid(archiveVideoRequestDTO.uid).get()
             var video = videoRepository.findByVid(archiveVideoRequestDTO.vid)
-            if (user.isPresent && video.isPresent) {
-                archiveRepository.save(Archive(user.get(), video.get(), last = true))
+            if (video.isPresent) {
+                archiveRepository.save(Archive(user, video.get(), last = true))
             } else {
-                throw ApiException(ExceptionEnum.BAD_REQUEST)
+                throw ApiException(ExceptionEnum.VIDEO_NOT_FOUND)
             }
 
         }
     }
 
-    fun getLastVideos(userId: Long): List<ArchiveVideoDTO> {
-        return archiveRepository.findByUserUidAndLastIsTrue(userId).map { archive -> ArchiveVideoDTO(archive) }
+    fun getLastVideos(userId: Long, page: Pageable): ResponseListDTO {
+        val result = archiveRepository.findAllByUserUidAndLastIsTrue(userId, page)
+        return ResponseListDTO(result.toList().map { archive -> ArchiveVideoDTO(archive) }, page.pageNumber, page.pageSize, result.totalElements)
     }
 
-    fun registerArchiveLikeVideo(archiveVideoRequestDTO: ArchiveVideoRequestDTO) {
+    fun updateArchiveLikeVideo(archiveVideoRequestDTO: ArchiveVideoRequestDTO) {
         val result = archiveRepository.findByUserUidAndVideoVid(archiveVideoRequestDTO.uid, archiveVideoRequestDTO.vid)
         if (result.isPresent) {
-            archiveRepository.updateArchiveLast(result.get().uidvid ?: 0, !result.get().likes)
+            archiveRepository.updateArchiveLiked(result.get().uidvid ?: 0, !result.get().likes)
         } else {
-            val user = usersRepository.findByUid(archiveVideoRequestDTO.uid)
+            val user = usersRepository.findByUid(archiveVideoRequestDTO.uid).get()
             var video = videoRepository.findByVid(archiveVideoRequestDTO.vid)
-            if (user.isPresent && video.isPresent) {
-                archiveRepository.save(Archive(user.get(), video.get(), like = true))
+            if (video.isPresent) {
+                archiveRepository.save(Archive(user, video.get(), like = true))
             } else {
-                throw ApiException(ExceptionEnum.BAD_REQUEST)
+                throw ApiException(ExceptionEnum.VIDEO_NOT_FOUND)
             }
         }
     }
 
-    fun getLikeVideos(userId: Long): List<ArchiveVideoDTO> {
-        return archiveRepository.findByUserUidAndLikesIsTrue(userId).map { archive -> ArchiveVideoDTO(archive) }
+    fun getLikeVideos(userId: Long, page: Pageable): ResponseListDTO {
+        val result = archiveRepository.findAllByUserUidAndLikesIsTrue(userId, page)
+        return ResponseListDTO(result.toList().map { archive -> ArchiveVideoDTO(archive) }, page.pageNumber, page.pageSize, result.totalElements)
     }
 
     fun registerArchiveTimeStamp(archiveVideoRequestDTO: ArchiveVideoRequestDTO) {

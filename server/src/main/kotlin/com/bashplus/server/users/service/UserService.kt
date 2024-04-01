@@ -1,5 +1,6 @@
 package com.bashplus.server.users.service
 
+import com.bashplus.server.common.ResponseListDTO
 import com.bashplus.server.common.exception.ApiException
 import com.bashplus.server.common.exception.ExceptionEnum
 import com.bashplus.server.information.repository.CategoryRepository
@@ -10,6 +11,7 @@ import com.bashplus.server.users.repository.UsersRepository
 import com.bashplus.server.video.dto.CommentDTO
 import com.bashplus.server.video.repository.CommentRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
 @Service
@@ -27,27 +29,19 @@ class UserService {
     private lateinit var commentRepository: CommentRepository
 
     fun setInterestingCategory(userId: Long, request: ArrayList<InterestRequestDTO>) {
-        val user = usersRepository.findByUid(userId)
-        if (user.isPresent) {
-            for (interest in request) {
-                val category = categoryRepository.findByCategoryAndLevel(interest.category, interest.level)
-                if (category.isPresent) {
-                    interestRepository.save(Interest(user.get(), category.get()))
-                } else {
-                    throw ApiException(ExceptionEnum.BAD_REQUEST)
-                }
+        val user = usersRepository.findByUid(userId).get()
+        for (interest in request) {
+            val category = categoryRepository.findByCategoryAndLevel(interest.category, interest.level)
+            if (category.isPresent) {
+                interestRepository.save(Interest(user, category.get()))
+            } else {
+                throw ApiException(ExceptionEnum.CATEGORY_NOT_FOUND)
             }
-        } else {
-            throw ApiException(ExceptionEnum.BAD_REQUEST)
         }
     }
 
-    fun getComments(userId: Long): List<CommentDTO> {
-        val user = usersRepository.findByUid(userId)
-        if (user.isPresent()) {
-            return commentRepository.findAllByUserUid(userId).map { comment -> CommentDTO(comment) }
-        } else {
-            throw ApiException(ExceptionEnum.BAD_REQUEST)
-        }
+    fun getComments(userId: Long, page: Pageable): ResponseListDTO {
+        val result = commentRepository.findAllByUserUid(userId, page)
+        return ResponseListDTO(result.toList().map { comment -> CommentDTO(comment) }, page.pageNumber, page.pageSize, result.totalElements)
     }
 }
