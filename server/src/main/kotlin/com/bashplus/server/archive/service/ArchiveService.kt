@@ -5,6 +5,7 @@ import com.bashplus.server.archive.dto.ArchiveVideoDTO
 import com.bashplus.server.archive.dto.ArchiveVideoRequestDTO
 import com.bashplus.server.archive.dto.ArchiveVideoWatchRecordDTO
 import com.bashplus.server.archive.repository.ArchiveRepository
+import com.bashplus.server.common.ResponseListDTO
 import com.bashplus.server.common.exception.ApiException
 import com.bashplus.server.common.exception.ExceptionEnum
 import com.bashplus.server.users.repository.UsersRepository
@@ -24,8 +25,9 @@ class ArchiveService {
     @Autowired
     private lateinit var videoRepository: VideoRepository
 
-    fun getVideoWatchRecords(userId: Long, page: Pageable): List<ArchiveVideoWatchRecordDTO> {
-        return archiveRepository.findAllByUserUid(userId, page).toList().map { archive -> ArchiveVideoWatchRecordDTO(archive) }
+    fun getVideoWatchRecords(userId: Long, page: Pageable): ResponseListDTO {
+        val result = archiveRepository.findAllByUserUid(userId, page)
+        return ResponseListDTO(result.toList().map { archive -> ArchiveVideoWatchRecordDTO(archive) }, page.pageNumber, page.pageSize, result.totalElements)
 
     }
 
@@ -45,8 +47,9 @@ class ArchiveService {
         }
     }
 
-    fun getLastVideos(userId: Long, page: Pageable): List<ArchiveVideoDTO> {
-        return archiveRepository.findAllByUserUidAndLastIsTrue(userId, page).toList().map { archive -> ArchiveVideoDTO(archive) }
+    fun getLastVideos(userId: Long, page: Pageable): ResponseListDTO {
+        val result = archiveRepository.findAllByUserUidAndLastIsTrue(userId, page)
+        return ResponseListDTO(result.toList().map { archive -> ArchiveVideoDTO(archive) }, page.pageNumber, page.pageSize, result.totalElements)
     }
 
     fun updateArchiveLikeVideo(archiveVideoRequestDTO: ArchiveVideoRequestDTO) {
@@ -64,8 +67,9 @@ class ArchiveService {
         }
     }
 
-    fun getLikeVideos(userId: Long, page: Pageable): List<ArchiveVideoDTO> {
-        return archiveRepository.findAllByUserUidAndLikesIsTrue(userId, page).toList().map { archive -> ArchiveVideoDTO(archive) }
+    fun getLikeVideos(userId: Long, page: Pageable): ResponseListDTO {
+        val result = archiveRepository.findAllByUserUidAndLikesIsTrue(userId, page)
+        return ResponseListDTO(result.toList().map { archive -> ArchiveVideoDTO(archive) }, page.pageNumber, page.pageSize, result.totalElements)
     }
 
     fun registerArchiveTimeStamp(archiveVideoRequestDTO: ArchiveVideoRequestDTO) {

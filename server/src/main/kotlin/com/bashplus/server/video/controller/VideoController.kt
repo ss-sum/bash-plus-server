@@ -1,6 +1,7 @@
 package com.bashplus.server.video.controller
 
 import com.bashplus.server.common.ResponseDTO
+import com.bashplus.server.common.ResponseListDTO
 import com.bashplus.server.video.dto.CommentRequestDTO
 import com.bashplus.server.video.dto.WatchRequestDTO
 import com.bashplus.server.video.service.VideoService
@@ -25,10 +26,10 @@ class VideoController {
 
     @Operation(summary = "영상 전체 목록 API", description = "")
     @GetMapping("/")
-    fun getAllVideo(@PathVariable videoId: Long, @RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseDTO {
+    fun getAllVideo(@PathVariable videoId: Long, @RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseListDTO {
         val pageable: Pageable = PageRequest.of(pageNum, pageSize)
         val result = videoService.getAllVideos(pageable)
-        return ResponseDTO(result)
+        return result
     }
 
     @Operation(summary = "영상 정보 API", description = "")
@@ -40,10 +41,10 @@ class VideoController {
 
     @Operation(summary = "영상 댓글 조회 API", description = "")
     @GetMapping("/{videoId}/comments")
-    fun getVideoComments(@PathVariable videoId: Long, @RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseDTO {
+    fun getVideoComments(@PathVariable videoId: Long, @RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseListDTO {
         val pageable: Pageable = PageRequest.of(pageNum, pageSize)
         val result = videoService.getVideoCommentInfo(videoId, pageable)
-        return ResponseDTO(result)
+        return result
     }
 
     @Operation(summary = "영상 댓글 등록 API", description = "")

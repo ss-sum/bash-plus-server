@@ -1,5 +1,6 @@
 package com.bashplus.server.users.service
 
+import com.bashplus.server.common.ResponseListDTO
 import com.bashplus.server.common.exception.ApiException
 import com.bashplus.server.common.exception.ExceptionEnum
 import com.bashplus.server.information.repository.CategoryRepository
@@ -39,7 +40,8 @@ class UserService {
         }
     }
 
-    fun getComments(userId: Long, page: Pageable): List<CommentDTO> {
-        return commentRepository.findAllByUserUid(userId, page).toList().map { comment -> CommentDTO(comment) }
+    fun getComments(userId: Long, page: Pageable): ResponseListDTO {
+        val result = commentRepository.findAllByUserUid(userId, page)
+        return ResponseListDTO(result.toList().map { comment -> CommentDTO(comment) }, page.pageNumber, page.pageSize, result.totalElements)
     }
 }
