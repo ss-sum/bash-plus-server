@@ -49,7 +49,7 @@ class VideoService {
             val videoTag = videoTagRepository.findTagByVid(videoId)
             return VideoDTO(video.get(), videoTag)
         } else {
-            throw ApiException(ExceptionEnum.NOT_FOUND)
+            throw ApiException(ExceptionEnum.VIDEO_NOT_FOUND)
         }
     }
 
@@ -59,7 +59,7 @@ class VideoService {
             val result = commentRepository.findAllByVideoVid(videoId, page)
             return ResponseListDTO(result.toList().map { comment -> CommentDTO(comment) }, page.pageNumber, page.pageSize, result.totalElements)
         } else {
-            throw ApiException(ExceptionEnum.NOT_FOUND)
+            throw ApiException(ExceptionEnum.VIDEO_NOT_FOUND)
         }
     }
 
@@ -69,7 +69,7 @@ class VideoService {
         if (video.isPresent) {
             commentRepository.save(Comment(user, video.get(), request.content))
         } else {
-            throw ApiException(ExceptionEnum.NOT_FOUND)
+            throw ApiException(ExceptionEnum.VIDEO_NOT_FOUND)
         }
     }
 
@@ -83,7 +83,7 @@ class VideoService {
             if (video.isPresent) {
                 archiveRepository.save(Archive(user, video.get(), request.time))
             } else {
-                throw ApiException(ExceptionEnum.NOT_FOUND)
+                throw ApiException(ExceptionEnum.VIDEO_NOT_FOUND)
             }
         }
     }

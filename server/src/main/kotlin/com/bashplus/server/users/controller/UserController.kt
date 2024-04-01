@@ -35,7 +35,7 @@ class UserController {
             userService.setInterestingCategory(userId, paramList)
             return ResponseDTO(HttpStatus.OK.reasonPhrase)
         } else {
-            throw ApiException(ExceptionEnum.BAD_REQUEST)
+            throw ApiException(ExceptionEnum.REQUEST_TYPE_BAD_REQUEST_PARAM)
         }
     }
 
