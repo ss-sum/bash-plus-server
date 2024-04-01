@@ -1,6 +1,7 @@
 package com.bashplus.server.users.controller
 
 import com.bashplus.server.common.ResponseDTO
+import com.bashplus.server.common.ResponseListDTO
 import com.bashplus.server.common.exception.ApiException
 import com.bashplus.server.common.exception.ExceptionEnum
 import com.bashplus.server.users.dto.InterestRequestDTO
@@ -40,10 +41,10 @@ class UserController {
 
     @Operation(summary = "댓글 기록 조회 API", description = "")
     @GetMapping("/comments")
-    fun getComments(@RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseDTO {
+    fun getComments(@RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseListDTO {
         val userId = (SecurityContextHolder.getContext().authentication.principal as User).username.toLong()
         val pageable: Pageable = PageRequest.of(pageNum, pageSize)
-        val commentLists = userService.getComments(userId, pageable)
-        return ResponseDTO(commentLists)
+        val result = userService.getComments(userId, pageable)
+        return result
     }
 }

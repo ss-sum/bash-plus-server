@@ -2,6 +2,7 @@ package com.bashplus.server.video.service
 
 import com.bashplus.server.archive.domain.Archive
 import com.bashplus.server.archive.repository.ArchiveRepository
+import com.bashplus.server.common.ResponseListDTO
 import com.bashplus.server.common.exception.ApiException
 import com.bashplus.server.common.exception.ExceptionEnum
 import com.bashplus.server.users.repository.UsersRepository
@@ -34,11 +35,12 @@ class VideoService {
     @Autowired
     private lateinit var archiveRepository: ArchiveRepository
 
-    fun getAllVideos(page: Pageable): List<VideoDTO> {
-        return videoRepository.findAll(page).toList().map { video ->
+    fun getAllVideos(page: Pageable): ResponseListDTO {
+        val result = videoRepository.findAll(page)
+        return ResponseListDTO(result.toList().map { video ->
             val videoTag = videoTagRepository.findTagByVid(video.vid!!)
             VideoDTO(video, videoTag)
-        }
+        }, page.pageNumber, page.pageSize, result.totalElements)
     }
 
     fun getVideoInfo(videoId: Long): VideoDTO {
@@ -51,10 +53,11 @@ class VideoService {
         }
     }
 
-    fun getVideoCommentInfo(videoId: Long, page: Pageable): List<CommentDTO> {
+    fun getVideoCommentInfo(videoId: Long, page: Pageable): ResponseListDTO {
         val video = videoRepository.findByVid(videoId)
         if (video.isPresent) {
-            return commentRepository.findAllByVideoVid(videoId, page).toList().map { comment -> CommentDTO(comment) }
+            val result = commentRepository.findAllByVideoVid(videoId, page)
+            return ResponseListDTO(result.toList().map { comment -> CommentDTO(comment) }, page.pageNumber, page.pageSize, result.totalElements)
         } else {
             throw ApiException(ExceptionEnum.NOT_FOUND)
         }

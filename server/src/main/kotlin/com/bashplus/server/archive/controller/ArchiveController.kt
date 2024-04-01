@@ -3,6 +3,7 @@ package com.bashplus.server.archive.controller
 import com.bashplus.server.archive.dto.ArchiveVideoRequestDTO
 import com.bashplus.server.archive.service.ArchiveService
 import com.bashplus.server.common.ResponseDTO
+import com.bashplus.server.common.ResponseListDTO
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.springframework.beans.factory.annotation.Autowired
@@ -23,11 +24,11 @@ class ArchiveController {
 
     @Operation(summary = "영상 시청 기록 목록 조회 API", description = "")
     @GetMapping("/videos")
-    fun getWatchedVideos(@RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseDTO {
+    fun getWatchedVideos(@RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseListDTO {
         val userId = (SecurityContextHolder.getContext().authentication.principal as User).username.toLong()
         val pageable: Pageable = PageRequest.of(pageNum, pageSize)
         val result = archiveService.getVideoWatchRecords(userId, pageable)
-        return ResponseDTO(result)
+        return result
     }
 
     @Operation(summary = "나중에 볼 영상 등록 API", description = "")
@@ -41,11 +42,11 @@ class ArchiveController {
 
     @Operation(summary = "나중에 볼 영상 목록 조회 API", description = "")
     @GetMapping("/last/videos")
-    fun getLikedVideos(@RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseDTO {
+    fun getLikedVideos(@RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseListDTO {
         val userId = (SecurityContextHolder.getContext().authentication.principal as User).username.toLong()
         val pageable: Pageable = PageRequest.of(pageNum, pageSize)
         val result = archiveService.getLastVideos(userId, pageable)
-        return ResponseDTO(result)
+        return result
     }
 
 
@@ -59,11 +60,11 @@ class ArchiveController {
 
     @Operation(summary = "좋아요한 영상 목록 조회 API", description = "")
     @GetMapping("/like/videos")
-    fun getArchivedVideos(@RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseDTO {
+    fun getArchivedVideos(@RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseListDTO {
         val userId = (SecurityContextHolder.getContext().authentication.principal as User).username.toLong()
         val pageable: Pageable = PageRequest.of(pageNum, pageSize)
         val result = archiveService.getLikeVideos(userId, pageable)
-        return ResponseDTO(result)
+        return result
     }
 
     @Operation(summary = "비디오 좋아요 등록 API", description = "")
