@@ -35,7 +35,7 @@ class UserService {
             if (category.isPresent) {
                 interestRepository.save(Interest(user, category.get()))
             } else {
-                throw ApiException(ExceptionEnum.BAD_REQUEST)
+                throw ApiException(ExceptionEnum.CATEGORY_NOT_FOUND)
             }
         }
     }
