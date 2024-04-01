@@ -1,6 +1,6 @@
 package com.bashplus.server.information.controller
 
-import com.bashplus.server.common.ResponseDTO
+import com.bashplus.server.common.ResponseListDTO
 import com.bashplus.server.information.service.InformationService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -18,18 +18,18 @@ class InformationController {
 
     @Operation(summary = "컨퍼런스 주최 목록 API", description = "검색 시 선택지 제공을 위한 목록 API")
     @GetMapping("/conference/hosts")
-    fun getHosts(@RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseDTO {
+    fun getHosts(@RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseListDTO {
         val pageable: Pageable = PageRequest.of(pageNum, pageSize)
         val result = informationService.getConferenceHosts(pageable)
-        return ResponseDTO(result)
+        return result
     }
 
     @Operation(summary = "카테고리 목록 API", description = "검색 시 선택지 제공을 위한 목록 API")
     @GetMapping("/conference/categories")
-    fun getCategory(@RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseDTO {
+    fun getCategory(@RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseListDTO {
         val pageable: Pageable = PageRequest.of(pageNum, pageSize)
         val result = informationService.getCategories(pageable)
-        return ResponseDTO(result)
+        return result
     }
 
 }
