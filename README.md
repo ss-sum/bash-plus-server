@@ -1,7 +1,7 @@
 # bash-plus-server
 **개발자 컨퍼런스 영상 큐레이션 서비스** bash.plus의 서버 레포지토리입니다.
 
----
+
 ## 로컬 개발 환경 세팅 방법
 
 1. git clone
