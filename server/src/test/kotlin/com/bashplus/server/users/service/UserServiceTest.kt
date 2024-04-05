@@ -1,6 +1,7 @@
 package com.bashplus.server.users.service
 
 import com.bashplus.server.common.exception.ApiException
+import com.bashplus.server.common.exception.ExceptionEnum
 import com.bashplus.server.host.domain.Conference
 import com.bashplus.server.host.repository.ConferenceRepository
 import com.bashplus.server.information.domain.Category
@@ -90,6 +91,7 @@ internal class UserServiceTest {
         val inputs = text.split(":")
         val request = arrayListOf(InterestRequestDTO(inputs.get(0), Integer.parseInt(inputs.get(1))))
         assertThrows<ApiException> { userService.setInterestingCategory(user.uid!!, request) }
+                .getError().getMessage()!!.equals(ExceptionEnum.BAD_REQUEST.getMessage())
     }
 
     @DisplayName("유저의 흥미 카테고리를 설정하는 함수 정상적 오류 응답에 대한 테스트 - 유저 관련 오류")
@@ -99,6 +101,7 @@ internal class UserServiceTest {
         val request = arrayListOf(InterestRequestDTO("spring", 1))
         val category = categoryRepository.findByCategoryAndLevel("spring", 1)
         assertThrows<ApiException> { userService.setInterestingCategory(input, request) }
+                .getError().getMessage()!!.equals(ExceptionEnum.BAD_REQUEST.getMessage())
     }
 
     @DisplayName("유저의 댓글 목록을 확인하는 함수 정상 동작에 대한 테스트")
@@ -114,6 +117,7 @@ internal class UserServiceTest {
     @ValueSource(longs = [2])
     fun getComments(input: Long) {
         assertThrows<ApiException> { userService.getComments(input) }
+                .getError().getMessage().equals(ExceptionEnum.BAD_REQUEST.getMessage())
     }
 
 }
