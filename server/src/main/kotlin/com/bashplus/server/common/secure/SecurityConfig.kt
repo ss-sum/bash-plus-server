@@ -73,6 +73,9 @@ class SecurityConfig @Autowired constructor(private var tokenProvider: TokenProv
                             .requestMatchers(AntPathRequestMatcher("/error")).permitAll()
                             .requestMatchers(AntPathRequestMatcher("/oauth2/**")).permitAll()
                             .requestMatchers(AntPathRequestMatcher("/auth/login/social/platform/**")).permitAll()
+                            .requestMatchers(AntPathRequestMatcher("/video/**", "GET")).permitAll()
+                            .requestMatchers(AntPathRequestMatcher("/information/**")).permitAll()
+                            .requestMatchers(AntPathRequestMatcher("/search/**")).permitAll()
                             .anyRequest().authenticated()
                 }
                 .oauth2Login {
