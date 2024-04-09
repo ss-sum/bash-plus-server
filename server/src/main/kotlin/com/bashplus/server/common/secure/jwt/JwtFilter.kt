@@ -1,7 +1,5 @@
 package com.bashplus.server.common.secure.jwt
 
-import com.bashplus.server.common.exception.ApiException
-import com.bashplus.server.common.exception.ExceptionEnum
 import jakarta.servlet.FilterChain
 import jakarta.servlet.ServletRequest
 import jakarta.servlet.ServletResponse
@@ -31,8 +29,7 @@ class JwtFilter(private val tokenProvider: TokenProvider) : GenericFilterBean() 
         val bearerToken: String? = request?.getHeader(AUTHORIZATION_HEADER)
         if (StringUtils.hasText(bearerToken) && bearerToken!!.startsWith("Bearer ")) {
             return bearerToken.substring(7)
-        } else {
-            throw ApiException(ExceptionEnum.BAD_TOKEN_FORM)
         }
+        return null;
     }
 }
