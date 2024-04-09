@@ -13,6 +13,7 @@ enum class ExceptionEnum(
     RUNTIME_EXCEPTION(HttpStatus.BAD_REQUEST, 400, "Bad Request"),
     EXPIRED_TOKEN(HttpStatus.UNAUTHORIZED, 401, "Expired Token"),
     INVALID_TOKEN(HttpStatus.UNAUTHORIZED, 401, "Invalid Token"),
+    BAD_TOKEN_FORM(HttpStatus.BAD_REQUEST, 400, "Token Format Is Invalid Or Token Does Not Exist"),
     TOKEN_ERROR(HttpStatus.BAD_REQUEST, 400, "Token Error"),
     NOT_FOUND(HttpStatus.NOT_FOUND, 404, "Not Found"),
     VIDEO_NOT_FOUND(HttpStatus.NOT_FOUND, 404, "Video Not Found"),
