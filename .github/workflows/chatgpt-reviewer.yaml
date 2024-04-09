@@ -16,7 +16,7 @@ jobs:
         # OPENAI_API_BASE: ${{ secrets.OPENAI_API_BASE }}
       # Optional configurations:
       with:
-        model: "gpt-4-turbo-preview"
+        model: "gpt-4-turbo-preview" 
       #   temperature: 0.2
       #   review_per_file: true
       #   comment_per_file: true
