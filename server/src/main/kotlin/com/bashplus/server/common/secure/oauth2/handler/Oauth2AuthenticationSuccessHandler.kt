@@ -10,23 +10,33 @@ import jakarta.servlet.http.HttpServletResponse
 import lombok.RequiredArgsConstructor
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.security.core.Authentication
+import org.springframework.security.web.DefaultRedirectStrategy
 import org.springframework.security.web.authentication.SimpleUrlAuthenticationSuccessHandler
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache
+import org.springframework.security.web.savedrequest.SavedRequest
 import org.springframework.stereotype.Component
 
 @Component
 @RequiredArgsConstructor
 class Oauth2AuthenticationSuccessHandler @Autowired constructor(private val tokenProvider: TokenProvider) : SimpleUrlAuthenticationSuccessHandler() {
 
+    private var requestCache = HttpSessionRequestCache()
+    private var redirectStrategy = DefaultRedirectStrategy()
     override fun onAuthenticationSuccess(request: HttpServletRequest?, response: HttpServletResponse?, authentication: Authentication?) {
         val user: OAuth2UserDTO? = authentication?.principal as? OAuth2UserDTO
         try {
             val accessToken = tokenProvider.createToken(authentication!!)
+            val savedRequest: SavedRequest? = requestCache.getRequest(request, response)
+            requestCache.removeRequest(request, response)
+            var uri: String? = "/auth/authorization/${user?.platform!!}"
+            if (savedRequest != null) {
+                uri = savedRequest.redirectUrl;
+            }
             val cookie = Cookie("Authorization", accessToken)
             cookie.secure = true
             cookie.isHttpOnly = true
             response?.addCookie(cookie)
-            val requestDispatcher = request?.getRequestDispatcher("/auth/authorization/${user?.platform!!}")
-            requestDispatcher?.forward(request, response)
+            redirectStrategy.sendRedirect(request, response, uri);
         } catch (e: Exception) {
             throw ApiException(ExceptionEnum.TOKEN_ERROR)
         }

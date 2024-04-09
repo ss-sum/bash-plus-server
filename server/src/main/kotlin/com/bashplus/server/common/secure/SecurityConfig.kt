@@ -39,7 +39,6 @@ class SecurityConfig @Autowired constructor(private var tokenProvider: TokenProv
         return WebSecurityCustomizer { web ->
             web.ignoring()
                     .requestMatchers(AntPathRequestMatcher("/auth/authorization/**"))
-                    .requestMatchers(AntPathRequestMatcher("/"))
         }
     }
 
@@ -67,6 +66,7 @@ class SecurityConfig @Autowired constructor(private var tokenProvider: TokenProv
                 }
                 .authorizeHttpRequests { request ->
                     request
+                            .requestMatchers(AntPathRequestMatcher("/")).permitAll()
                             .requestMatchers(AntPathRequestMatcher("/swagger-ui/**")).permitAll()
                             .requestMatchers(AntPathRequestMatcher("/v3/api-docs/**")).permitAll()
                             .requestMatchers(AntPathRequestMatcher("/swagger-resources/**")).permitAll()
@@ -90,5 +90,6 @@ class SecurityConfig @Autowired constructor(private var tokenProvider: TokenProv
 
         return http.build()
     }
+
 
 }

@@ -4,14 +4,16 @@ import jakarta.servlet.FilterChain
 import jakarta.servlet.ServletRequest
 import jakarta.servlet.ServletResponse
 import jakarta.servlet.http.HttpServletRequest
+import jakarta.servlet.http.HttpServletResponse
 import org.springframework.security.core.Authentication
 import org.springframework.security.core.context.SecurityContextHolder
+import org.springframework.security.web.savedrequest.HttpSessionRequestCache
 import org.springframework.util.StringUtils
 import org.springframework.web.filter.GenericFilterBean
 
 class JwtFilter(private val tokenProvider: TokenProvider) : GenericFilterBean() {
     private val AUTHORIZATION_HEADER: String = "Authorization"
-
+    private var requestCache = HttpSessionRequestCache()
     override fun doFilter(request: ServletRequest?, response: ServletResponse?, chain: FilterChain?) {
         val httpServletRequest: HttpServletRequest = request as HttpServletRequest
         val jwt: String? = resolveToken(httpServletRequest)
@@ -19,6 +21,7 @@ class JwtFilter(private val tokenProvider: TokenProvider) : GenericFilterBean() 
             val authentication: Authentication = tokenProvider.getAuthentication(jwt)
             SecurityContextHolder.getContext().authentication = authentication
         }
+        requestCache.saveRequest(request, response as HttpServletResponse)
         chain?.doFilter(request, response)
     }
 
