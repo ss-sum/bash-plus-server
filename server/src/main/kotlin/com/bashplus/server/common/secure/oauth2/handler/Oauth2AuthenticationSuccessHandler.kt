@@ -28,10 +28,7 @@ class Oauth2AuthenticationSuccessHandler @Autowired constructor(private val toke
             val accessToken = tokenProvider.createToken(authentication!!)
             val savedRequest: SavedRequest? = requestCache.getRequest(request, response)
             requestCache.removeRequest(request, response)
-            var uri: String? = "/auth/authorization/${user?.platform!!}"
-            if (savedRequest != null) {
-                uri = savedRequest.redirectUrl;
-            }
+            var uri: String? = savedRequest?.redirectUrl ?: "/auth/authorization/${user?.platform!!}"
             val cookie = Cookie("Authorization", accessToken)
             cookie.secure = true
             cookie.isHttpOnly = true
