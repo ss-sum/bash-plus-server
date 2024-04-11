@@ -1,6 +1,7 @@
 package com.bashplus.server.common
 
 import com.auth0.jwt.exceptions.TokenExpiredException
+import com.bashplus.server.common.exception.ApiException
 import com.bashplus.server.common.exception.ExceptionEnum
 import com.fasterxml.jackson.databind.ObjectMapper
 import jakarta.servlet.FilterChain
@@ -25,6 +26,8 @@ class CustomExceptionHandlerFilter : OncePerRequestFilter() {
             setErrorResponse(response, ExceptionEnum.TOKEN_ERROR)
         } catch (e: TokenExpiredException) {
             setErrorResponse(response, ExceptionEnum.EXPIRED_TOKEN)
+        } catch (e: ApiException) {
+            setErrorResponse(response, e.getError())
         } catch (e: Exception) {
             setErrorResponse(response, ExceptionEnum.INTERNAL_SERVER_ERROR)
         }
