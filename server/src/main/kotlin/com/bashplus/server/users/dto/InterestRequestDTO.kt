@@ -1,8 +1,6 @@
 package com.bashplus.server.users.dto
 
-class InterestRequestDTO {
-    var category: String = ""
-        private set
-    var level: Int = 0
-        private set
+class InterestRequestDTO(category: String, level: Int) {
+    var category: String = category ?: ""
+    var level: Int = level ?: 0
 }

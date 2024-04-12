@@ -7,7 +7,6 @@ import com.bashplus.server.common.secure.jwt.JwtFilter
 import com.bashplus.server.common.secure.jwt.TokenProvider
 import com.bashplus.server.common.secure.oauth2.handler.Oauth2AuthenticationFailureHandler
 import com.bashplus.server.common.secure.oauth2.handler.Oauth2AuthenticationSuccessHandler
-import com.bashplus.server.users.repository.UsersRepository
 import com.bashplus.server.users.service.CustomOAuth2UserService
 import lombok.RequiredArgsConstructor
 import org.springframework.beans.factory.annotation.Autowired
@@ -27,10 +26,10 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 
 @Configuration
 @RequiredArgsConstructor
-@EnableWebSecurity
-class SecurityConfig @Autowired constructor(private var tokenProvider: TokenProvider, private val userService: CustomOAuth2UserService, private val usersRepository: UsersRepository) {
+@EnableWebSecurity(debug = true)
+class SecurityConfig @Autowired constructor(private var tokenProvider: TokenProvider, private val userService: CustomOAuth2UserService) {
 
-    private val authenticationSuccessHandler: Oauth2AuthenticationSuccessHandler = Oauth2AuthenticationSuccessHandler(tokenProvider, usersRepository)
+    private val authenticationSuccessHandler: Oauth2AuthenticationSuccessHandler = Oauth2AuthenticationSuccessHandler(tokenProvider)
     private val authenticationFailureHandler: Oauth2AuthenticationFailureHandler = Oauth2AuthenticationFailureHandler()
     private val jwtAccessDeniedHandler: JwtAccessDeniedHandler = JwtAccessDeniedHandler()
     private val jwtAuthenticationEntryPoint: JwtAuthenticationEntryPoint = JwtAuthenticationEntryPoint()
