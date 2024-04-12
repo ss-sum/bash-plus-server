@@ -3,10 +3,16 @@ package com.bashplus.server.users.controller
 import com.bashplus.server.common.ResponseDTO
 import com.bashplus.server.common.ResponseListDTO
 import com.bashplus.server.common.exception.ApiException
+import com.bashplus.server.common.exception.ApiExceptionEntity
 import com.bashplus.server.common.exception.ExceptionEnum
+import com.bashplus.server.information.dto.CategoryInformationDTO
 import com.bashplus.server.users.dto.InterestRequestDTO
 import com.bashplus.server.users.service.UserService
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.media.Content
+import io.swagger.v3.oas.annotations.media.Schema
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.jetbrains.annotations.NotNull
 import org.springframework.beans.factory.annotation.Autowired
@@ -27,6 +33,11 @@ class UserController {
     private lateinit var userService: UserService
 
     @Operation(summary = "관심분야 설정 API", description = "")
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "OK", content = [Content(schema = Schema(implementation = InterestRequestDTO::class))]),
+        ApiResponse(responseCode = "400", description = "BAD REQUEST", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]),
+        ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
+    ])
     @PostMapping("/interesting")
     fun setInterestingCategory(@NotNull @RequestBody interestRequest: Map<String, ArrayList<InterestRequestDTO>>): ResponseDTO {
         val userId = (SecurityContextHolder.getContext().authentication.principal as User).username.toLong()
@@ -40,6 +51,11 @@ class UserController {
     }
 
     @Operation(summary = "댓글 기록 조회 API", description = "")
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "OK"),
+        ApiResponse(responseCode = "400", description = "BAD REQUEST", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]),
+        ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
+    ])
     @GetMapping("/comments")
     fun getComments(@RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseListDTO {
         val userId = (SecurityContextHolder.getContext().authentication.principal as User).username.toLong()

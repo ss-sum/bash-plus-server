@@ -1,11 +1,20 @@
 package com.bashplus.server.video.controller
 
+import com.bashplus.server.common.CommonController
 import com.bashplus.server.common.ResponseDTO
 import com.bashplus.server.common.ResponseListDTO
+import com.bashplus.server.common.exception.ApiExceptionEntity
+import com.bashplus.server.information.dto.CategoryInformationDTO
+import com.bashplus.server.video.dto.CommentDTO
 import com.bashplus.server.video.dto.CommentRequestDTO
+import com.bashplus.server.video.dto.VideoDTO
 import com.bashplus.server.video.dto.WatchRequestDTO
 import com.bashplus.server.video.service.VideoService
 import io.swagger.v3.oas.annotations.Operation
+import io.swagger.v3.oas.annotations.media.Content
+import io.swagger.v3.oas.annotations.media.Schema
+import io.swagger.v3.oas.annotations.responses.ApiResponse
+import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
 import org.jetbrains.annotations.NotNull
 import org.springframework.beans.factory.annotation.Autowired
@@ -25,6 +34,11 @@ class VideoController {
     private lateinit var videoService: VideoService
 
     @Operation(summary = "영상 전체 목록 API", description = "")
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "OK", content = [Content(schema = Schema(implementation = VideoDTO::class))]),
+        ApiResponse(responseCode = "400", description = "BAD REQUEST", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]),
+        ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
+    ])
     @GetMapping("/")
     fun getAllVideo(@PathVariable videoId: Long, @RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseListDTO {
         val pageable: Pageable = PageRequest.of(pageNum, pageSize)
@@ -33,6 +47,11 @@ class VideoController {
     }
 
     @Operation(summary = "영상 정보 API", description = "")
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "OK", content = [Content(schema = Schema(implementation = VideoDTO::class))]),
+        ApiResponse(responseCode = "400", description = "BAD REQUEST", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]),
+        ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
+    ])
     @GetMapping("/{videoId}")
     fun getVideo(@PathVariable videoId: Long): ResponseDTO {
         val result = videoService.getVideoInfo(videoId)
@@ -40,6 +59,11 @@ class VideoController {
     }
 
     @Operation(summary = "영상 댓글 조회 API", description = "")
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "OK", content = [Content(schema = Schema(implementation = CommentDTO::class))]),
+        ApiResponse(responseCode = "400", description = "BAD REQUEST", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]),
+        ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
+    ])
     @GetMapping("/{videoId}/comments")
     fun getVideoComments(@PathVariable videoId: Long, @RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseListDTO {
         val pageable: Pageable = PageRequest.of(pageNum, pageSize)
@@ -48,6 +72,11 @@ class VideoController {
     }
 
     @Operation(summary = "영상 댓글 등록 API", description = "")
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "OK", content = [Content(schema = Schema(implementation = CommentRequestDTO::class))]),
+        ApiResponse(responseCode = "400", description = "BAD REQUEST", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]),
+        ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
+    ])
     @PostMapping("/comment")
     fun writeComment(@NotNull @RequestBody commentRequest: CommentRequestDTO): ResponseDTO {
         val userId = (SecurityContextHolder.getContext().authentication.principal as User).username.toLong()
@@ -57,6 +86,11 @@ class VideoController {
     }
 
     @Operation(summary = "영상 시청 기록 API", description = "영상 시청 시작, 종료 등 기록을 위한 API")
+    @ApiResponses(value = [
+        ApiResponse(responseCode = "200", description = "OK", content = [Content(schema = Schema(implementation = WatchRequestDTO::class))]),
+        ApiResponse(responseCode = "400", description = "BAD REQUEST", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]),
+        ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
+    ])
     @PostMapping("/watch")
     fun watchVideo(@NotNull @RequestBody watchRequest: WatchRequestDTO): ResponseDTO {
         val userId = (SecurityContextHolder.getContext().authentication.principal as User).username.toLong()
