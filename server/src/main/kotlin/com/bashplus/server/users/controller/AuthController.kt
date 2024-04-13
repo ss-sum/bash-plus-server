@@ -43,7 +43,7 @@ class AuthController {
     }
 
 
-    @Operation(summary = "소셜 로그아웃 API", description = "")
+    @Operation(summary = "소셜 로그아웃 API", description = "로그아웃 API")
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "OK"),
         ApiResponse(responseCode = "400", description = "BAD REQUEST"),

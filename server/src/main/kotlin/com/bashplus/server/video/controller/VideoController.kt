@@ -33,7 +33,7 @@ class VideoController {
     @Autowired
     private lateinit var videoService: VideoService
 
-    @Operation(summary = "영상 전체 목록 API", description = "")
+    @Operation(summary = "영상 전체 목록 API", description = "등록된 전체 영상을 목록으로 조회하게 해주는 API")
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "OK", content = [Content(schema = Schema(implementation = VideoDTO::class))]),
         ApiResponse(responseCode = "400", description = "BAD REQUEST", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]),
@@ -46,7 +46,7 @@ class VideoController {
         return result
     }
 
-    @Operation(summary = "영상 정보 API", description = "")
+    @Operation(summary = "영상 정보 API", description = "컨퍼런스 영상의 정보를 보여주는 API")
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "OK", content = [Content(schema = Schema(implementation = VideoDTO::class))]),
         ApiResponse(responseCode = "400", description = "BAD REQUEST", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]),
@@ -58,7 +58,7 @@ class VideoController {
         return ResponseDTO(result)
     }
 
-    @Operation(summary = "영상 댓글 조회 API", description = "")
+    @Operation(summary = "영상 댓글 조회 API", description = "영상에 달린 댓글을 볼 수 있게 해주는 API")
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "OK", content = [Content(schema = Schema(implementation = CommentDTO::class))]),
         ApiResponse(responseCode = "400", description = "BAD REQUEST", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]),
@@ -71,7 +71,7 @@ class VideoController {
         return result
     }
 
-    @Operation(summary = "영상 댓글 등록 API", description = "")
+    @Operation(summary = "영상 댓글 등록 API", description = "영상에 본인의 댓글을 등록하게 해주는 API")
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "OK", content = [Content(schema = Schema(implementation = CommentRequestDTO::class))]),
         ApiResponse(responseCode = "400", description = "BAD REQUEST", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]),

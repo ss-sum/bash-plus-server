@@ -32,7 +32,7 @@ class UserController {
     @Autowired
     private lateinit var userService: UserService
 
-    @Operation(summary = "관심분야 설정 API", description = "")
+    @Operation(summary = "관심분야 설정 API", description = "본인의 관심분야를 설정하게 해주는 API")
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "OK", content = [Content(schema = Schema(implementation = InterestRequestDTO::class))]),
         ApiResponse(responseCode = "400", description = "BAD REQUEST", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]),
@@ -50,7 +50,7 @@ class UserController {
         }
     }
 
-    @Operation(summary = "댓글 기록 조회 API", description = "")
+    @Operation(summary = "댓글 기록 조회 API", description = "본인이 쓴 댓글을 조회할 수 있도록 해주는 API")
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "OK"),
         ApiResponse(responseCode = "400", description = "BAD REQUEST", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]),
