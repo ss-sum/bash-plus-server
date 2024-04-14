@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.*
 class AuthController {
     @Operation(summary = "소셜 로그인 API", description = "각 플랫폼의 인증을 통해서 로그인")
     @ApiResponses(value = [
-        ApiResponse(responseCode = "200", description = "OK", content = [Content(schema = Schema(implementation = OAuth2UserDTO::class))]),
+        ApiResponse(responseCode = "301", description = "Permanently Moved "),
         ApiResponse(responseCode = "400", description = "BAD REQUEST", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]),
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])
