@@ -1,5 +1,6 @@
 package com.bashplus.server.archive.controller
 
+import com.bashplus.server.archive.dto.ArchiveVideoDTO
 import com.bashplus.server.archive.dto.ArchiveVideoRequestDTO
 import com.bashplus.server.archive.dto.ArchiveVideoWatchRecordDTO
 import com.bashplus.server.archive.service.ArchiveService
@@ -10,6 +11,7 @@ import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.ExampleObject
 import io.swagger.v3.oas.annotations.media.Schema
+import io.swagger.v3.oas.annotations.media.SchemaProperty
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -31,7 +33,7 @@ class ArchiveController {
 
     @Operation(summary = "영상 시청 기록 목록 조회 API", description = "마이페이지에서 유저가 시청한 영상들을 목록으로 조회할 수 있도록 하는 API")
     @ApiResponses(value = [
-        ApiResponse(responseCode = "200", description = "OK", content = [Content(schema = Schema(implementation = ArchiveVideoWatchRecordDTO::class))]),
+        ApiResponse(responseCode = "200", description = "OK", content = [Content(schemaProperties = [SchemaProperty(name = "message", schema = Schema(implementation = ArchiveVideoWatchRecordDTO::class))])]),
         ApiResponse(responseCode = "400", description = "BAD REQUEST", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]),
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])
@@ -59,7 +61,7 @@ class ArchiveController {
 
     @Operation(summary = "나중에 볼 영상 목록 조회 API", description = "유저가 등록한 '나중에 볼 영상' 목록을 조회하는 API")
     @ApiResponses(value = [
-        ApiResponse(responseCode = "200", description = "OK", content = [Content(schema = Schema(implementation = ArchiveVideoRequestDTO::class))]),
+        ApiResponse(responseCode = "200", description = "OK", content = [Content(schemaProperties = [SchemaProperty(name = "message", schema = Schema(implementation = ArchiveVideoDTO::class))])]),
         ApiResponse(responseCode = "400", description = "BAD REQUEST", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]),
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])
@@ -87,7 +89,7 @@ class ArchiveController {
 
     @Operation(summary = "좋아요한 영상 목록 조회 API", description = "")
     @ApiResponses(value = [
-        ApiResponse(responseCode = "200", description = "OK", content = [Content(schema = Schema(implementation = ArchiveVideoRequestDTO::class))]),
+        ApiResponse(responseCode = "200", description = "OK", content = [Content(schemaProperties = [SchemaProperty(name = "message", schema = Schema(implementation = ArchiveVideoDTO::class))])]),
         ApiResponse(responseCode = "400", description = "BAD REQUEST", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]),
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])
