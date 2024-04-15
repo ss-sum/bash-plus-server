@@ -10,6 +10,7 @@ import com.bashplus.server.users.dto.InterestRequestDTO
 import com.bashplus.server.users.service.UserService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
+import io.swagger.v3.oas.annotations.media.ExampleObject
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
@@ -39,6 +40,7 @@ class UserController {
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])
     @PostMapping("/interesting")
+    @io.swagger.v3.oas.annotations.parameters.RequestBody(content = [Content(examples = [ExampleObject(value = """{"param":["category":"spring","level":1]}""")])])
     fun setInterestingCategory(@NotNull @RequestBody interestRequest: Map<String, ArrayList<InterestRequestDTO>>): ResponseDTO {
         val userId = (SecurityContextHolder.getContext().authentication.principal as User).username.toLong()
         val paramList: ArrayList<InterestRequestDTO>? = interestRequest["param"]
