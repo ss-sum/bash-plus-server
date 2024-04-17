@@ -54,7 +54,7 @@ class UserController {
 
     @Operation(summary = "댓글 기록 조회 API", description = "본인이 쓴 댓글을 조회할 수 있도록 해주는 API")
     @ApiResponses(value = [
-        ApiResponse(responseCode = "200", description = "OK"),
+        ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
         ApiResponse(responseCode = "400", description = "BAD REQUEST", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]),
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])

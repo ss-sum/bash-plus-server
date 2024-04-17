@@ -26,7 +26,7 @@ class SearchController {
 
     @Operation(summary = "컨퍼런스별 전체 영상 목록 조회 API", description = "영상 목록을 컨퍼런스별로 조회할 수 있게 해주는 영상 조회 API")
     @ApiResponses(value = [
-        ApiResponse(responseCode = "200", description = "OK", content = [Content(schema = Schema(implementation = VideoInformationDTO::class))]),
+        ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
         ApiResponse(responseCode = "400", description = "BAD REQUEST", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]),
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])
@@ -41,7 +41,7 @@ class SearchController {
     @Operation(summary = "컨퍼런스 주최 검색 API", description = "컨퍼런스의 호스트를 검색하게 할 수 있게 해주는 검색 API")
     @GetMapping("/conference/host/{keyword}")
     @ApiResponses(value = [
-        ApiResponse(responseCode = "200", description = "OK", content = [Content(schema = Schema(implementation = HostInformationDTO::class))]),
+        ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
         ApiResponse(responseCode = "400", description = "BAD REQUEST", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]),
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])
@@ -53,7 +53,7 @@ class SearchController {
 
     @Operation(summary = "컨퍼런스 카테고리 검색 API", description = "컨퍼런스의 카테고리를 검색하게 해주는 API")
     @ApiResponses(value = [
-        ApiResponse(responseCode = "200", description = "OK", content = [Content(schema = Schema(implementation = CategoryInformationDTO::class))]),
+        ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
         ApiResponse(responseCode = "400", description = "BAD REQUEST", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]),
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])
@@ -66,7 +66,7 @@ class SearchController {
 
     @Operation(summary = "컨퍼런스 비디오 제목 검색 API", description = "컨퍼런스 비디오의 제목으로 검색하게 해주는 API")
     @ApiResponses(value = [
-        ApiResponse(responseCode = "200", description = "OK", content = [Content(schema = Schema(implementation = VideoInformationDTO::class))]),
+        ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
         ApiResponse(responseCode = "400", description = "BAD REQUEST", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]),
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])

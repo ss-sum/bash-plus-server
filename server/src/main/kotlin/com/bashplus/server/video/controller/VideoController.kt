@@ -33,7 +33,7 @@ class VideoController {
 
     @Operation(summary = "영상 전체 목록 API", description = "등록된 전체 영상을 목록으로 조회하게 해주는 API")
     @ApiResponses(value = [
-        ApiResponse(responseCode = "200", description = "OK", content = [Content(schema = Schema(implementation = VideoDTO::class))]),
+        ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
         ApiResponse(responseCode = "400", description = "BAD REQUEST", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]),
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])
@@ -58,7 +58,7 @@ class VideoController {
 
     @Operation(summary = "영상 댓글 조회 API", description = "영상에 달린 댓글을 볼 수 있게 해주는 API")
     @ApiResponses(value = [
-        ApiResponse(responseCode = "200", description = "OK", content = [Content(schema = Schema(implementation = CommentDTO::class))]),
+        ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
         ApiResponse(responseCode = "400", description = "BAD REQUEST", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]),
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])
