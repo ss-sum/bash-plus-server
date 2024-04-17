@@ -45,12 +45,12 @@ class ArchiveController {
 
     @Operation(summary = "나중에 볼 영상 등록 API", description = "해당 영상을 유저의 '나중에 볼 영상' 목록에 추가하는 API")
     @ApiResponses(value = [
-        ApiResponse(responseCode = "200", description = "OK"),
+        ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
         ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]),
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])
     @PatchMapping("/last/video")
-    fun addVideo(@RequestBody archiveVideoRequestDTO: ArchiveVideoRequestDTO): ResponseDTO {
+    fun addVideo(@RequestBody archiveVideoRequestDTO: ArchiveVideoRequestDTO): ResponseDTO<String> {
         val userId = (SecurityContextHolder.getContext().authentication.principal as User).username.toLong()
         archiveVideoRequestDTO.uid = userId
         archiveService.updateArchiveLastVideo(archiveVideoRequestDTO)
@@ -74,12 +74,12 @@ class ArchiveController {
 
     @Operation(summary = "타임스탬프 등록 API", description = "")
     @ApiResponses(value = [
-        ApiResponse(responseCode = "200", description = "OK"),
+        ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
         ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]),
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])
     @PostMapping("/timestamp")
-    fun stampCurrentTime(@RequestBody archiveVideoRequestDTO: ArchiveVideoRequestDTO): ResponseDTO {
+    fun stampCurrentTime(@RequestBody archiveVideoRequestDTO: ArchiveVideoRequestDTO): ResponseDTO<String> {
         val userId = (SecurityContextHolder.getContext().authentication.principal as User).username.toLong()
         archiveVideoRequestDTO.uid = userId
         return ResponseDTO(HttpStatus.CREATED.reasonPhrase)
@@ -101,12 +101,12 @@ class ArchiveController {
 
     @Operation(summary = "비디오 좋아요 등록 API", description = "")
     @ApiResponses(value = [
-        ApiResponse(responseCode = "200", description = "OK"),
+        ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
         ApiResponse(responseCode = "401", description = "UNAUTHORIZED", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]),
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])
     @PatchMapping("/like/video")
-    fun updateLikeOnVideo(@RequestBody archiveVideoRequestDTO: ArchiveVideoRequestDTO): ResponseDTO {
+    fun updateLikeOnVideo(@RequestBody archiveVideoRequestDTO: ArchiveVideoRequestDTO): ResponseDTO<String> {
         val userId = (SecurityContextHolder.getContext().authentication.principal as User).username.toLong()
         archiveVideoRequestDTO.uid = userId
         archiveService.updateArchiveLikeVideo(archiveVideoRequestDTO)

@@ -46,12 +46,12 @@ class VideoController {
 
     @Operation(summary = "영상 정보 API", description = "컨퍼런스 영상의 정보를 보여주는 API")
     @ApiResponses(value = [
-        ApiResponse(responseCode = "200", description = "OK", content = [Content(schema = Schema(implementation = VideoDTO::class))]),
+        ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
         ApiResponse(responseCode = "400", description = "BAD REQUEST", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]),
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])
     @GetMapping("/{videoId}")
-    fun getVideo(@PathVariable videoId: Long): ResponseDTO {
+    fun getVideo(@PathVariable videoId: Long): ResponseDTO<VideoDTO> {
         val result = videoService.getVideoInfo(videoId)
         return ResponseDTO(result)
     }
@@ -71,12 +71,12 @@ class VideoController {
 
     @Operation(summary = "영상 댓글 등록 API", description = "영상에 본인의 댓글을 등록하게 해주는 API")
     @ApiResponses(value = [
-        ApiResponse(responseCode = "200", description = "OK", content = [Content(schema = Schema(implementation = CommentRequestDTO::class))]),
+        ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
         ApiResponse(responseCode = "400", description = "BAD REQUEST", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]),
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])
     @PostMapping("/comment")
-    fun writeComment(@NotNull @RequestBody commentRequest: CommentRequestDTO): ResponseDTO {
+    fun writeComment(@NotNull @RequestBody commentRequest: CommentRequestDTO): ResponseDTO<String> {
         val userId = (SecurityContextHolder.getContext().authentication.principal as User).username.toLong()
         commentRequest.uid = userId
         videoService.writeComment(commentRequest)
@@ -85,12 +85,12 @@ class VideoController {
 
     @Operation(summary = "영상 시청 기록 API", description = "영상 시청 시작, 종료 등 기록을 위한 API")
     @ApiResponses(value = [
-        ApiResponse(responseCode = "200", description = "OK", content = [Content(schema = Schema(implementation = WatchRequestDTO::class))]),
+        ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
         ApiResponse(responseCode = "400", description = "BAD REQUEST", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]),
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])
     @PostMapping("/watch")
-    fun watchVideo(@NotNull @RequestBody watchRequest: WatchRequestDTO): ResponseDTO {
+    fun watchVideo(@NotNull @RequestBody watchRequest: WatchRequestDTO): ResponseDTO<String> {
         val userId = (SecurityContextHolder.getContext().authentication.principal as User).username.toLong()
         watchRequest.uid = userId
         videoService.updateWatchRecord(watchRequest)

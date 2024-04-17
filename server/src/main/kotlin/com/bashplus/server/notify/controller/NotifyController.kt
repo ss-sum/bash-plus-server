@@ -24,9 +24,10 @@ class NotifyController {
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])
     @PostMapping("/setting")
-    fun addNotifySetting(): ResponseDTO {
-        return ResponseDTO()
+    fun addNotifySetting(): ResponseDTO<String> {
+        return ResponseDTO("")
     }
+
     @Operation(summary = "알림 구독 API", description = "특정 주제 구독 등의 설정")
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "OK"),
@@ -34,7 +35,7 @@ class NotifyController {
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])
     @PostMapping("/subscribe")
-    fun subscribe(): ResponseDTO{
-        return ResponseDTO()
+    fun subscribe(): ResponseDTO<String> {
+        return ResponseDTO("")
     }
 }

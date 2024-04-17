@@ -19,8 +19,8 @@ class CurationController {
         ApiResponse(responseCode = "400", description = "BAD REQUEST"),
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR")
     ])
-    fun getRecommendedVideos(@PathVariable userId: String): ResponseDTO {
-        return ResponseDTO()
+    fun getRecommendedVideos(@PathVariable userId: String): ResponseDTO<String> {
+        return ResponseDTO("")
     }
 
 }

@@ -35,13 +35,13 @@ class UserController {
 
     @Operation(summary = "관심분야 설정 API", description = "본인의 관심분야를 설정하게 해주는 API")
     @ApiResponses(value = [
-        ApiResponse(responseCode = "200", description = "OK", content = [Content(schema = Schema(implementation = InterestRequestDTO::class))]),
+        ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
         ApiResponse(responseCode = "400", description = "BAD REQUEST", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]),
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])
     @PostMapping("/interesting")
     @io.swagger.v3.oas.annotations.parameters.RequestBody(content = [Content(examples = [ExampleObject(value = """{"param":["category":"spring","level":1]}""")])])
-    fun setInterestingCategory(@NotNull @RequestBody interestRequest: Map<String, ArrayList<InterestRequestDTO>>): ResponseDTO {
+    fun setInterestingCategory(@NotNull @RequestBody interestRequest: Map<String, ArrayList<InterestRequestDTO>>): ResponseDTO<String> {
         val userId = (SecurityContextHolder.getContext().authentication.principal as User).username.toLong()
         val paramList: ArrayList<InterestRequestDTO>? = interestRequest["param"]
         if (!paramList.isNullOrEmpty()) {
