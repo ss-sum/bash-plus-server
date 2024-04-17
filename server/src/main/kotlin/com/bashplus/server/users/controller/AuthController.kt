@@ -2,6 +2,7 @@ package com.bashplus.server.users.controller
 
 import com.bashplus.server.common.ResponseDTO
 import com.bashplus.server.common.exception.ApiExceptionEntity
+import io.swagger.v3.oas.annotations.Hidden
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
@@ -28,6 +29,7 @@ class AuthController {
     fun socialLogin(@PathVariable platform: String, request: HttpServletRequest, response: HttpServletResponse): Unit {
     }
 
+    @Hidden
     @Operation(summary = "소셜 로그인 API", description = "로그인 결과 반환")
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),

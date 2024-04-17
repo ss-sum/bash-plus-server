@@ -2,6 +2,7 @@ package com.bashplus.server.notify.controller
 
 import com.bashplus.server.common.ResponseDTO
 import com.bashplus.server.common.exception.ApiExceptionEntity
+import io.swagger.v3.oas.annotations.Hidden
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.Schema
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/notify")
 class NotifyController {
+    @Hidden
     @Operation(summary = "알림 설정 API", description = "알림 받기/끄기 등의 기본 설정")
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "OK"),
@@ -28,6 +30,7 @@ class NotifyController {
         return ResponseDTO("")
     }
 
+    @Hidden
     @Operation(summary = "알림 구독 API", description = "특정 주제 구독 등의 설정")
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "OK"),

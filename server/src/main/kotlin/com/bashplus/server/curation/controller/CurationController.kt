@@ -1,6 +1,7 @@
 package com.bashplus.server.curation.controller
 
 import com.bashplus.server.common.ResponseDTO
+import io.swagger.v3.oas.annotations.Hidden
 import io.swagger.v3.oas.annotations.responses.ApiResponse
 import io.swagger.v3.oas.annotations.responses.ApiResponses
 import io.swagger.v3.oas.annotations.tags.Tag
@@ -13,6 +14,7 @@ import org.springframework.web.bind.annotation.RestController
 @RestController
 @RequestMapping("/curation")
 class CurationController {
+    @Hidden
     @GetMapping("/video/user/{userId}/recommendation")
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "OK"),
