@@ -1,10 +1,8 @@
 package com.bashplus.server.video.controller
 
-import com.bashplus.server.common.CommonController
 import com.bashplus.server.common.ResponseDTO
 import com.bashplus.server.common.ResponseListDTO
 import com.bashplus.server.common.exception.ApiExceptionEntity
-import com.bashplus.server.information.dto.CategoryInformationDTO
 import com.bashplus.server.video.dto.CommentDTO
 import com.bashplus.server.video.dto.CommentRequestDTO
 import com.bashplus.server.video.dto.VideoDTO
@@ -40,7 +38,7 @@ class VideoController {
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])
     @GetMapping("/")
-    fun getAllVideo(@PathVariable videoId: Long, @RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseListDTO {
+    fun getAllVideo(@PathVariable videoId: Long, @RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseListDTO<VideoDTO> {
         val pageable: Pageable = PageRequest.of(pageNum, pageSize)
         val result = videoService.getAllVideos(pageable)
         return result
@@ -65,7 +63,7 @@ class VideoController {
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])
     @GetMapping("/{videoId}/comments")
-    fun getVideoComments(@PathVariable videoId: Long, @RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseListDTO {
+    fun getVideoComments(@PathVariable videoId: Long, @RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseListDTO<CommentDTO> {
         val pageable: Pageable = PageRequest.of(pageNum, pageSize)
         val result = videoService.getVideoCommentInfo(videoId, pageable)
         return result

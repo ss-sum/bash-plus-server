@@ -9,7 +9,6 @@ import com.bashplus.server.common.ResponseListDTO
 import com.bashplus.server.common.exception.ApiExceptionEntity
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
-import io.swagger.v3.oas.annotations.media.ExampleObject
 import io.swagger.v3.oas.annotations.media.Schema
 import io.swagger.v3.oas.annotations.media.SchemaProperty
 import io.swagger.v3.oas.annotations.responses.ApiResponse
@@ -38,7 +37,7 @@ class ArchiveController {
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])
     @GetMapping("/videos")
-    fun getWatchedVideos(@RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseListDTO {
+    fun getWatchedVideos(@RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseListDTO<ArchiveVideoWatchRecordDTO> {
         val userId = (SecurityContextHolder.getContext().authentication.principal as User).username.toLong()
         val pageable: Pageable = PageRequest.of(pageNum, pageSize)
         val result = archiveService.getVideoWatchRecords(userId, pageable)
@@ -66,7 +65,7 @@ class ArchiveController {
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])
     @GetMapping("/last/videos")
-    fun getLikedVideos(@RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseListDTO {
+    fun getLikedVideos(@RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseListDTO<ArchiveVideoDTO> {
         val userId = (SecurityContextHolder.getContext().authentication.principal as User).username.toLong()
         val pageable: Pageable = PageRequest.of(pageNum, pageSize)
         val result = archiveService.getLastVideos(userId, pageable)
@@ -94,7 +93,7 @@ class ArchiveController {
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])
     @GetMapping("/like/videos")
-    fun getArchivedVideos(@RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseListDTO {
+    fun getArchivedVideos(@RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseListDTO<ArchiveVideoDTO> {
         val userId = (SecurityContextHolder.getContext().authentication.principal as User).username.toLong()
         val pageable: Pageable = PageRequest.of(pageNum, pageSize)
         val result = archiveService.getLikeVideos(userId, pageable)

@@ -35,7 +35,7 @@ class VideoService {
     @Autowired
     private lateinit var archiveRepository: ArchiveRepository
 
-    fun getAllVideos(page: Pageable): ResponseListDTO {
+    fun getAllVideos(page: Pageable): ResponseListDTO<VideoDTO> {
         val result = videoRepository.findAll(page)
         return ResponseListDTO(result.toList().map { video ->
             val videoTag = videoTagRepository.findTagByVid(video.vid!!)
@@ -53,7 +53,7 @@ class VideoService {
         }
     }
 
-    fun getVideoCommentInfo(videoId: Long, page: Pageable): ResponseListDTO {
+    fun getVideoCommentInfo(videoId: Long, page: Pageable): ResponseListDTO<CommentDTO> {
         val video = videoRepository.findByVid(videoId)
         if (video.isPresent) {
             val result = commentRepository.findAllByVideoVid(videoId, page)

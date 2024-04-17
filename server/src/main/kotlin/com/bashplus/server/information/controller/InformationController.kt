@@ -31,7 +31,7 @@ class InformationController {
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])
     @GetMapping("/conference/hosts")
-    fun getHosts(@RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseListDTO {
+    fun getHosts(@RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseListDTO<HostInformationDTO> {
         val pageable: Pageable = PageRequest.of(pageNum, pageSize)
         val result = informationService.getConferenceHosts(pageable)
         return result
@@ -44,7 +44,7 @@ class InformationController {
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])
     @GetMapping("/conference/categories")
-    fun getCategory(@RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseListDTO {
+    fun getCategory(@RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseListDTO<CategoryInformationDTO> {
         val pageable: Pageable = PageRequest.of(pageNum, pageSize)
         val result = informationService.getCategories(pageable)
         return result

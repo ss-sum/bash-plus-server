@@ -29,22 +29,22 @@ class SearchService {
     @Autowired
     private lateinit var categoryRepository: CategoryRepository
 
-    fun getAllVideosByConference(keyword: String, page: Pageable): ResponseListDTO {
+    fun getAllVideosByConference(keyword: String, page: Pageable): ResponseListDTO<VideoInformationDTO> {
         val result = videoRepository.findAllByConferenceTitle(keyword, page)
         return ResponseListDTO(result.toList().map { video -> VideoInformationDTO(video) }, page.pageNumber, page.pageSize, result.totalElements)
     }
 
-    fun getHostSearchResult(keyword: String, page: Pageable): ResponseListDTO {
+    fun getHostSearchResult(keyword: String, page: Pageable): ResponseListDTO<HostInformationDTO> {
         val result = hostRepository.findAllByCompanyIsLikeIgnoreCase(mappingKeyword(keyword), page)
         return ResponseListDTO(result.toList().map { host -> HostInformationDTO(host) }, page.pageNumber, page.pageSize, result.totalElements)
     }
 
-    fun getCategorySearchResult(keyword: String, page: Pageable): ResponseListDTO {
+    fun getCategorySearchResult(keyword: String, page: Pageable): ResponseListDTO<CategoryInformationDTO> {
         val result = categoryRepository.findAllByCategoryIsLikeIgnoreCase(mappingKeyword(keyword), page)
         return ResponseListDTO(result.toList().map { category -> CategoryInformationDTO(category) }, page.pageNumber, page.pageSize, result.totalElements)
     }
 
-    fun getVideoSearchResult(keyword: String, page: Pageable): ResponseListDTO {
+    fun getVideoSearchResult(keyword: String, page: Pageable): ResponseListDTO<VideoInformationDTO> {
         val result = videoRepository.findAllByTitleIsLikeIgnoreCase(mappingKeyword(keyword), page)
         return ResponseListDTO(result.toList().map { video -> VideoInformationDTO(video) }, page.pageNumber, page.pageSize, result.totalElements)
     }

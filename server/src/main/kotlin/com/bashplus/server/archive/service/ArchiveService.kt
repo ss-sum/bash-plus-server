@@ -25,7 +25,7 @@ class ArchiveService {
     @Autowired
     private lateinit var videoRepository: VideoRepository
 
-    fun getVideoWatchRecords(userId: Long, page: Pageable): ResponseListDTO {
+    fun getVideoWatchRecords(userId: Long, page: Pageable): ResponseListDTO<ArchiveVideoWatchRecordDTO> {
         val result = archiveRepository.findAllByUserUid(userId, page)
         return ResponseListDTO(result.toList().map { archive -> ArchiveVideoWatchRecordDTO(archive) }, page.pageNumber, page.pageSize, result.totalElements)
 
@@ -47,7 +47,7 @@ class ArchiveService {
         }
     }
 
-    fun getLastVideos(userId: Long, page: Pageable): ResponseListDTO {
+    fun getLastVideos(userId: Long, page: Pageable): ResponseListDTO<ArchiveVideoDTO> {
         val result = archiveRepository.findAllByUserUidAndLastIsTrue(userId, page)
         return ResponseListDTO(result.toList().map { archive -> ArchiveVideoDTO(archive) }, page.pageNumber, page.pageSize, result.totalElements)
     }
@@ -67,7 +67,7 @@ class ArchiveService {
         }
     }
 
-    fun getLikeVideos(userId: Long, page: Pageable): ResponseListDTO {
+    fun getLikeVideos(userId: Long, page: Pageable): ResponseListDTO<ArchiveVideoDTO> {
         val result = archiveRepository.findAllByUserUidAndLikesIsTrue(userId, page)
         return ResponseListDTO(result.toList().map { archive -> ArchiveVideoDTO(archive) }, page.pageNumber, page.pageSize, result.totalElements)
     }

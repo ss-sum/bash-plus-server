@@ -31,7 +31,7 @@ class SearchController {
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])
     @GetMapping("/conference/{keyword}/videos")
-    fun getWholeVideos(@PathVariable keyword: String, @RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseListDTO {
+    fun getWholeVideos(@PathVariable keyword: String, @RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseListDTO<VideoInformationDTO> {
         val pageable: Pageable = PageRequest.of(pageNum, pageSize)
         val result = searchService.getAllVideosByConference(keyword, pageable)
         return result
@@ -45,7 +45,7 @@ class SearchController {
         ApiResponse(responseCode = "400", description = "BAD REQUEST", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]),
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])
-    fun searchHost(@PathVariable keyword: String, @RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseListDTO {
+    fun searchHost(@PathVariable keyword: String, @RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseListDTO<HostInformationDTO> {
         val pageable: Pageable = PageRequest.of(pageNum, pageSize)
         val result = searchService.getHostSearchResult(keyword, pageable)
         return result
@@ -58,7 +58,7 @@ class SearchController {
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])
     @GetMapping("/category/{keyword}")
-    fun searchCategory(@PathVariable keyword: String, @RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseListDTO {
+    fun searchCategory(@PathVariable keyword: String, @RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseListDTO<CategoryInformationDTO> {
         val pageable: Pageable = PageRequest.of(pageNum, pageSize)
         val result = searchService.getCategorySearchResult(keyword, pageable)
         return result
@@ -71,7 +71,7 @@ class SearchController {
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])
     @GetMapping("/conference/video/{keyword}")
-    fun searchConference(@PathVariable keyword: String, @RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseListDTO {
+    fun searchConference(@PathVariable keyword: String, @RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseListDTO<VideoInformationDTO> {
         val pageable: Pageable = PageRequest.of(pageNum, pageSize)
         val result = searchService.getVideoSearchResult(keyword, pageable)
         return result

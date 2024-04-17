@@ -5,9 +5,9 @@ import com.bashplus.server.common.ResponseListDTO
 import com.bashplus.server.common.exception.ApiException
 import com.bashplus.server.common.exception.ApiExceptionEntity
 import com.bashplus.server.common.exception.ExceptionEnum
-import com.bashplus.server.information.dto.CategoryInformationDTO
 import com.bashplus.server.users.dto.InterestRequestDTO
 import com.bashplus.server.users.service.UserService
+import com.bashplus.server.video.dto.CommentDTO
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
 import io.swagger.v3.oas.annotations.media.ExampleObject
@@ -59,7 +59,7 @@ class UserController {
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])
     @GetMapping("/comments")
-    fun getComments(@RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseListDTO {
+    fun getComments(@RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseListDTO<CommentDTO> {
         val userId = (SecurityContextHolder.getContext().authentication.principal as User).username.toLong()
         val pageable: Pageable = PageRequest.of(pageNum, pageSize)
         val result = userService.getComments(userId, pageable)

@@ -40,7 +40,7 @@ class UserService {
         }
     }
 
-    fun getComments(userId: Long, page: Pageable): ResponseListDTO {
+    fun getComments(userId: Long, page: Pageable): ResponseListDTO<CommentDTO> {
         val result = commentRepository.findAllByUserUid(userId, page)
         return ResponseListDTO(result.toList().map { comment -> CommentDTO(comment) }, page.pageNumber, page.pageSize, result.totalElements)
     }
