@@ -1,8 +1,8 @@
 package com.bashplus.server.common
 
-class ResponseDTO(message: Any = "") {
-    private val message: Any = message
-    fun getMessage(): Any {
+class ResponseDTO<T>(message: T) {
+    private val message: T = message
+    fun getMessage(): T {
         return message
     }
 }

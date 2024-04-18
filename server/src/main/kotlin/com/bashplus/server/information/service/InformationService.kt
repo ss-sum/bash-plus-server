@@ -18,12 +18,12 @@ class InformationService {
     @Autowired
     private lateinit var categoryRepository: CategoryRepository
 
-    fun getConferenceHosts(page: Pageable): ResponseListDTO {
+    fun getConferenceHosts(page: Pageable): ResponseListDTO<HostInformationDTO> {
         val result = hostRepository.findAll(page)
         return ResponseListDTO(result.toList().map { host -> HostInformationDTO(host) }, page.pageNumber, page.pageSize, result.totalElements)
     }
 
-    fun getCategories(page: Pageable): ResponseListDTO {
+    fun getCategories(page: Pageable): ResponseListDTO<CategoryInformationDTO> {
         val result = categoryRepository.findAll(page)
         return ResponseListDTO(result.toList().map { category -> CategoryInformationDTO(category) }, page.pageNumber, page.pageSize, result.totalElements)
     }
