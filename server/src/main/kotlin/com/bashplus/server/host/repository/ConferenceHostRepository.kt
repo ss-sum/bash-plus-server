@@ -7,4 +7,5 @@ import org.springframework.stereotype.Repository
 @Repository
 open interface ConferenceHostRepository : JpaRepository<ConferenceHost, String> {
     open fun findAllByConferenceCoid(coid: Long): List<ConferenceHost>
+    open fun findAllByHostHid(hid: Long): List<ConferenceHost>
 }
