@@ -16,4 +16,7 @@ open interface VideoRepository : JpaRepository<Video, String> {
 
     @Query("SELECT v FROM Video v WHERE v.conference.coid = (SELECT ch.conference.coid FROM ConferenceHost ch JOIN Host h ON ch.host.hid = h.hid WHERE LOWER(h.company) like LOWER(:host))")
     open fun findAllByConferenceHost(host: String, pageable: Pageable): Page<Video>
+
+    @Query("SELECT v from Video v WHERE v.vid IN (SELECT vt.video.vid FROM VideoTag vt JOIN Category t ON vt.category.tid = t.tid WHERE LOWER(t.category) like LOWER(:category))")
+    open fun findAllByVideoCategory(category: String, pageable: Pageable): Page<Video>
 }

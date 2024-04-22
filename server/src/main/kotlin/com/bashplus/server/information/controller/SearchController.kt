@@ -2,7 +2,6 @@ package com.bashplus.server.information.controller
 
 import com.bashplus.server.common.ResponseListDTO
 import com.bashplus.server.common.exception.ApiExceptionEntity
-import com.bashplus.server.information.dto.CategoryInformationDTO
 import com.bashplus.server.information.dto.VideoInformationDTO
 import com.bashplus.server.information.service.SearchService
 import io.swagger.v3.oas.annotations.Operation
@@ -37,7 +36,7 @@ class SearchController {
     }
 
 
-    @Operation(summary = "컨퍼런스 주최 검색 API", description = "컨퍼런스를 호스트를 기준으로 검색하게 할 수 있게 해주는 검색 API")
+    @Operation(summary = "컨퍼런스 주최 검색 API", description = "컨퍼런스를 호스트를 기준으로 검색할 수 있게 해주는 검색 API")
     @GetMapping("/conference/host/{keyword}")
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
@@ -50,14 +49,14 @@ class SearchController {
         return result
     }
 
-    @Operation(summary = "컨퍼런스 카테고리 검색 API", description = "컨퍼런스의 카테고리를 검색하게 해주는 API")
+    @Operation(summary = "컨퍼런스 카테고리 검색 API", description = "컨퍼런스의 카테고리를 기준으로 검색할 수 있게 해주는 API")
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
         ApiResponse(responseCode = "400", description = "BAD REQUEST", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]),
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])
     @GetMapping("/category/{keyword}")
-    fun searchCategory(@PathVariable keyword: String, @RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseListDTO<CategoryInformationDTO> {
+    fun searchCategory(@PathVariable keyword: String, @RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseListDTO<VideoInformationDTO> {
         val pageable: Pageable = PageRequest.of(pageNum, pageSize)
         val result = searchService.getCategorySearchResult(keyword, pageable)
         return result
