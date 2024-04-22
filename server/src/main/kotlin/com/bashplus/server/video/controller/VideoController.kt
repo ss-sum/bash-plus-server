@@ -37,8 +37,8 @@ class VideoController {
         ApiResponse(responseCode = "400", description = "BAD REQUEST", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]),
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])
-    @GetMapping("/")
-    fun getAllVideo(@PathVariable videoId: Long, @RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseListDTO<VideoDTO> {
+    @GetMapping
+    fun getAllVideo(@RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseListDTO<VideoDTO> {
         val pageable: Pageable = PageRequest.of(pageNum, pageSize)
         val result = videoService.getAllVideos(pageable)
         return result
