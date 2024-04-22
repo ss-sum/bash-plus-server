@@ -1,5 +1,6 @@
 package com.bashplus.server.information.controller
 
+import com.bashplus.server.common.OrderByEnum
 import com.bashplus.server.common.ResponseListDTO
 import com.bashplus.server.common.exception.ApiExceptionEntity
 import com.bashplus.server.information.dto.VideoInformationDTO
@@ -29,9 +30,9 @@ class SearchController {
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])
     @GetMapping("/conference/{keyword}/videos")
-    fun getWholeVideos(@PathVariable keyword: String, @RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseListDTO<VideoInformationDTO> {
+    fun getWholeVideos(@PathVariable keyword: String, @RequestParam pageSize: Int, @RequestParam pageNum: Int, @RequestParam(defaultValue = "DATE") order: OrderByEnum): ResponseListDTO<VideoInformationDTO> {
         val pageable: Pageable = PageRequest.of(pageNum, pageSize)
-        val result = searchService.getAllVideosByConference(keyword, pageable)
+        val result = searchService.getAllVideosByConference(keyword, order, pageable)
         return result
     }
 
@@ -43,9 +44,9 @@ class SearchController {
         ApiResponse(responseCode = "400", description = "BAD REQUEST", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]),
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])
-    fun searchHost(@PathVariable keyword: String, @RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseListDTO<VideoInformationDTO> {
+    fun searchHost(@PathVariable keyword: String, @RequestParam pageSize: Int, @RequestParam pageNum: Int, @RequestParam(defaultValue = "DATE") order: OrderByEnum): ResponseListDTO<VideoInformationDTO> {
         val pageable: Pageable = PageRequest.of(pageNum, pageSize)
-        val result = searchService.getHostSearchResult(keyword, pageable)
+        val result = searchService.getHostSearchResult(keyword, order, pageable)
         return result
     }
 
@@ -56,9 +57,9 @@ class SearchController {
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])
     @GetMapping("/category/{keyword}")
-    fun searchCategory(@PathVariable keyword: String, @RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseListDTO<VideoInformationDTO> {
+    fun searchCategory(@PathVariable keyword: String, @RequestParam pageSize: Int, @RequestParam pageNum: Int, @RequestParam(defaultValue = "DATE") order: OrderByEnum): ResponseListDTO<VideoInformationDTO> {
         val pageable: Pageable = PageRequest.of(pageNum, pageSize)
-        val result = searchService.getCategorySearchResult(keyword, pageable)
+        val result = searchService.getCategorySearchResult(keyword, order, pageable)
         return result
     }
 
@@ -68,10 +69,10 @@ class SearchController {
         ApiResponse(responseCode = "400", description = "BAD REQUEST", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]),
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])
-    @GetMapping("/conference/video/{keyword}")
-    fun searchConference(@PathVariable keyword: String, @RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseListDTO<VideoInformationDTO> {
+    @GetMapping("/video/{keyword}")
+    fun searchConference(@PathVariable keyword: String, @RequestParam pageSize: Int, @RequestParam pageNum: Int, @RequestParam(defaultValue = "DATE") order: OrderByEnum): ResponseListDTO<VideoInformationDTO> {
         val pageable: Pageable = PageRequest.of(pageNum, pageSize)
-        val result = searchService.getVideoSearchResult(keyword, pageable)
+        val result = searchService.getVideoSearchResult(keyword, order, pageable)
         return result
     }
 
