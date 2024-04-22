@@ -30,7 +30,7 @@ class SearchService {
     @Autowired
     private lateinit var categoryRepository: CategoryRepository
 
-    fun getAllVideosByConference(keyword: String, order: OrderByEnum, page: Pageable): ResponseListDTO<VideoInformationDTO> {
+    fun getConferenceSearchResult(keyword: String, order: OrderByEnum, page: Pageable): ResponseListDTO<VideoInformationDTO> {
         lateinit var result: Page<Video>
         if (order == OrderByEnum.DATE) {
             result = videoRepository.findAllByConferenceTitleIsLikeIgnoreCase(mappingKeyword(keyword), page)

@@ -23,21 +23,21 @@ class SearchController {
     @Autowired
     private lateinit var searchService: SearchService
 
-    @Operation(summary = "컨퍼런스별 전체 영상 목록 조회 API", description = "영상 목록을 컨퍼런스별로 조회할 수 있게 해주는 영상 조회 API")
+    @Operation(summary = "컨퍼런스 검색 API", description = "컨퍼런스를 기준으로 영상을 검색해주는 영상 조회 API")
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
         ApiResponse(responseCode = "400", description = "BAD REQUEST", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]),
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])
     @GetMapping("/conference/{keyword}/videos")
-    fun getWholeVideos(@PathVariable keyword: String, @RequestParam pageSize: Int, @RequestParam pageNum: Int, @RequestParam(defaultValue = "DATE") order: OrderByEnum): ResponseListDTO<VideoInformationDTO> {
+    fun searchConference(@PathVariable keyword: String, @RequestParam pageSize: Int, @RequestParam pageNum: Int, @RequestParam(defaultValue = "DATE") order: OrderByEnum): ResponseListDTO<VideoInformationDTO> {
         val pageable: Pageable = PageRequest.of(pageNum, pageSize)
-        val result = searchService.getAllVideosByConference(keyword, order, pageable)
+        val result = searchService.getConferenceSearchResult(keyword, order, pageable)
         return result
     }
 
 
-    @Operation(summary = "컨퍼런스 주최 검색 API", description = "컨퍼런스를 호스트를 기준으로 검색할 수 있게 해주는 검색 API")
+    @Operation(summary = "컨퍼런스 주최 검색 API", description = "컨퍼런스 호스트를 기준으로 영상을 검색해주는 검색 API")
     @GetMapping("/conference/host/{keyword}")
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
@@ -50,7 +50,7 @@ class SearchController {
         return result
     }
 
-    @Operation(summary = "컨퍼런스 카테고리 검색 API", description = "컨퍼런스의 카테고리를 기준으로 검색할 수 있게 해주는 API")
+    @Operation(summary = "컨퍼런스 카테고리 검색 API", description = "컨퍼런스의 카테고리를 기준으로 영상을 검색해주는 API")
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
         ApiResponse(responseCode = "400", description = "BAD REQUEST", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]),
@@ -63,14 +63,14 @@ class SearchController {
         return result
     }
 
-    @Operation(summary = "컨퍼런스 비디오 제목 검색 API", description = "컨퍼런스 비디오의 제목으로 검색하게 해주는 API")
+    @Operation(summary = "컨퍼런스 비디오 제목 검색 API", description = "제목을 기준으로 영상을 검색하게 해주는 API")
     @ApiResponses(value = [
         ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
         ApiResponse(responseCode = "400", description = "BAD REQUEST", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]),
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])
     @GetMapping("/video/{keyword}")
-    fun searchConference(@PathVariable keyword: String, @RequestParam pageSize: Int, @RequestParam pageNum: Int, @RequestParam(defaultValue = "DATE") order: OrderByEnum): ResponseListDTO<VideoInformationDTO> {
+    fun searchVideo(@PathVariable keyword: String, @RequestParam pageSize: Int, @RequestParam pageNum: Int, @RequestParam(defaultValue = "DATE") order: OrderByEnum): ResponseListDTO<VideoInformationDTO> {
         val pageable: Pageable = PageRequest.of(pageNum, pageSize)
         val result = searchService.getVideoSearchResult(keyword, order, pageable)
         return result
