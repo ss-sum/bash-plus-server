@@ -28,7 +28,7 @@ class SearchService {
     private lateinit var categoryRepository: CategoryRepository
 
     fun getAllVideosByConference(keyword: String, page: Pageable): ResponseListDTO<VideoInformationDTO> {
-        val result = videoRepository.findAllByConferenceTitle(keyword, page)
+        val result = videoRepository.findAllByConferenceTitleIsLikeIgnoreCase(mappingKeyword(keyword), page)
         return ResponseListDTO(result.toList().map { video -> VideoInformationDTO(video) }, page.pageNumber, page.pageSize, result.totalElements)
     }
 
