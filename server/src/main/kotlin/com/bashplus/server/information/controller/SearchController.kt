@@ -2,6 +2,7 @@ package com.bashplus.server.information.controller
 
 import com.bashplus.server.common.OrderByEnum
 import com.bashplus.server.common.ResponseListDTO
+import com.bashplus.server.common.SortingEnum
 import com.bashplus.server.common.exception.ApiExceptionEntity
 import com.bashplus.server.information.dto.VideoInformationDTO
 import com.bashplus.server.information.service.SearchService
@@ -30,9 +31,9 @@ class SearchController {
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])
     @GetMapping("/conference/{keyword}/videos")
-    fun searchConference(@PathVariable keyword: String, @RequestParam pageSize: Int, @RequestParam pageNum: Int, @RequestParam(defaultValue = "DATE") order: OrderByEnum): ResponseListDTO<VideoInformationDTO> {
+    fun searchConference(@PathVariable keyword: String, @RequestParam pageSize: Int, @RequestParam pageNum: Int, @RequestParam(defaultValue = "DATE") order: OrderByEnum, @RequestParam(defaultValue = "DESC") sort: SortingEnum): ResponseListDTO<VideoInformationDTO> {
         val pageable: Pageable = PageRequest.of(pageNum, pageSize)
-        val result = searchService.getConferenceSearchResult(keyword, order, pageable)
+        val result = searchService.getConferenceSearchResult(keyword, order, sort, pageable)
         return result
     }
 
@@ -44,9 +45,9 @@ class SearchController {
         ApiResponse(responseCode = "400", description = "BAD REQUEST", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]),
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])
-    fun searchHost(@PathVariable keyword: String, @RequestParam pageSize: Int, @RequestParam pageNum: Int, @RequestParam(defaultValue = "DATE") order: OrderByEnum): ResponseListDTO<VideoInformationDTO> {
+    fun searchHost(@PathVariable keyword: String, @RequestParam pageSize: Int, @RequestParam pageNum: Int, @RequestParam(defaultValue = "DATE") order: OrderByEnum, @RequestParam(defaultValue = "DESC") sort: SortingEnum): ResponseListDTO<VideoInformationDTO> {
         val pageable: Pageable = PageRequest.of(pageNum, pageSize)
-        val result = searchService.getHostSearchResult(keyword, order, pageable)
+        val result = searchService.getHostSearchResult(keyword, order, sort, pageable)
         return result
     }
 
@@ -57,9 +58,9 @@ class SearchController {
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])
     @GetMapping("/category/{keyword}")
-    fun searchCategory(@PathVariable keyword: String, @RequestParam pageSize: Int, @RequestParam pageNum: Int, @RequestParam(defaultValue = "DATE") order: OrderByEnum): ResponseListDTO<VideoInformationDTO> {
+    fun searchCategory(@PathVariable keyword: String, @RequestParam pageSize: Int, @RequestParam pageNum: Int, @RequestParam(defaultValue = "DATE") order: OrderByEnum, @RequestParam(defaultValue = "DESC") sort: SortingEnum): ResponseListDTO<VideoInformationDTO> {
         val pageable: Pageable = PageRequest.of(pageNum, pageSize)
-        val result = searchService.getCategorySearchResult(keyword, order, pageable)
+        val result = searchService.getCategorySearchResult(keyword, order, sort, pageable)
         return result
     }
 
@@ -70,9 +71,9 @@ class SearchController {
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])
     @GetMapping("/video/{keyword}")
-    fun searchVideo(@PathVariable keyword: String, @RequestParam pageSize: Int, @RequestParam pageNum: Int, @RequestParam(defaultValue = "DATE") order: OrderByEnum): ResponseListDTO<VideoInformationDTO> {
+    fun searchVideo(@PathVariable keyword: String, @RequestParam pageSize: Int, @RequestParam pageNum: Int, @RequestParam(defaultValue = "DATE") order: OrderByEnum, @RequestParam(defaultValue = "DESC") sort: SortingEnum): ResponseListDTO<VideoInformationDTO> {
         val pageable: Pageable = PageRequest.of(pageNum, pageSize)
-        val result = searchService.getVideoSearchResult(keyword, order, pageable)
+        val result = searchService.getVideoSearchResult(keyword, order, sort, pageable)
         return result
     }
 
