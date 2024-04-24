@@ -2,11 +2,9 @@ package com.bashplus.server.video.controller
 
 import com.bashplus.server.common.ResponseDTO
 import com.bashplus.server.common.ResponseListDTO
+import com.bashplus.server.common.SortingEnum
 import com.bashplus.server.common.exception.ApiExceptionEntity
-import com.bashplus.server.video.dto.CommentDTO
-import com.bashplus.server.video.dto.CommentRequestDTO
-import com.bashplus.server.video.dto.VideoDTO
-import com.bashplus.server.video.dto.WatchRequestDTO
+import com.bashplus.server.video.dto.*
 import com.bashplus.server.video.service.VideoService
 import io.swagger.v3.oas.annotations.Operation
 import io.swagger.v3.oas.annotations.media.Content
@@ -38,9 +36,9 @@ class VideoController {
         ApiResponse(responseCode = "500", description = "INTERNAL SERVER ERROR", content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))])
     ])
     @GetMapping
-    fun getAllVideo(@RequestParam pageSize: Int, @RequestParam pageNum: Int): ResponseListDTO<VideoDTO> {
+    fun getAllVideo(@RequestParam pageSize: Int, @RequestParam pageNum: Int, @RequestParam(defaultValue = "DATE") order: VideoOrderEnum, @RequestParam(defaultValue = "DESC") sort: SortingEnum): ResponseListDTO<VideoDTO> {
         val pageable: Pageable = PageRequest.of(pageNum, pageSize)
-        val result = videoService.getAllVideos(pageable)
+        val result = videoService.getAllVideos(order, sort, pageable)
         return result
     }
 

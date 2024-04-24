@@ -11,6 +11,14 @@ import java.util.*
 @Repository
 open interface VideoRepository : JpaRepository<Video, String> {
     open fun findByVid(vid: Long): Optional<Video>
+    open fun findAllByOrderByConferenceStartAtTimeDesc(pageable: Pageable): Page<Video>
+    open fun findAllByOrderByConferenceStartAtTimeAsc(pageable: Pageable): Page<Video>
+
+    @Query("SELECT v from Video v LEFT JOIN Archive a on a.video.vid = v.vid group by v.vid order by count(a.likes) desc")
+    open fun findAllByLikeDesc(pageable: Pageable): Page<Video>
+
+    @Query("SELECT v from Video v LEFT JOIN Archive a on a.video.vid = v.vid group by v.vid order by count(a.likes) asc")
+    open fun findAllByLikeAsc(pageable: Pageable): Page<Video>
     open fun findAllByConferenceTitleIsLikeIgnoreCaseOrderByConferenceStartAtTimeDesc(title: String, pageable: Pageable): Page<Video>
     open fun findAllByConferenceTitleIsLikeIgnoreCaseOrderByConferenceStartAtTimeAsc(title: String, pageable: Pageable): Page<Video>
 

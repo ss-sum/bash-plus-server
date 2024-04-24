@@ -13,7 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
-import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.annotation.web.configuration.WebSecurityCustomizer
 import org.springframework.security.config.annotation.web.configurers.CsrfConfigurer
 import org.springframework.security.config.annotation.web.configurers.HeadersConfigurer
@@ -26,7 +25,6 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 
 @Configuration
 @RequiredArgsConstructor
-@EnableWebSecurity(debug = true)
 class SecurityConfig @Autowired constructor(private var tokenProvider: TokenProvider, private val userService: CustomOAuth2UserService) {
 
     private val authenticationSuccessHandler: Oauth2AuthenticationSuccessHandler = Oauth2AuthenticationSuccessHandler(tokenProvider)
