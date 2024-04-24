@@ -1,9 +1,9 @@
 package com.bashplus.server.information.controller
 
-import com.bashplus.server.common.OrderByEnum
 import com.bashplus.server.common.ResponseListDTO
 import com.bashplus.server.common.SortingEnum
 import com.bashplus.server.common.exception.ApiExceptionEntity
+import com.bashplus.server.information.dto.OrderByEnum
 import com.bashplus.server.information.dto.VideoInformationDTO
 import com.bashplus.server.information.service.SearchService
 import io.swagger.v3.oas.annotations.Operation

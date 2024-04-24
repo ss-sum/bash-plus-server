@@ -1,4 +1,4 @@
-package com.bashplus.server.common
+package com.bashplus.server.information.dto
 
 enum class OrderByEnum {
     DATE,

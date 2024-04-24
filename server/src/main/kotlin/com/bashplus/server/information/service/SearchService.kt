@@ -1,8 +1,8 @@
 package com.bashplus.server.information.service
 
-import com.bashplus.server.common.OrderByEnum
 import com.bashplus.server.common.ResponseListDTO
 import com.bashplus.server.common.SortingEnum
+import com.bashplus.server.information.dto.OrderByEnum
 import com.bashplus.server.information.dto.VideoInformationDTO
 import com.bashplus.server.video.domain.Video
 import com.bashplus.server.video.repository.VideoRepository
