@@ -1,14 +1,13 @@
 package com.bashplus.server.information.service
 
 import com.bashplus.server.common.ResponseListDTO
-import com.bashplus.server.host.repository.ConferenceRepository
-import com.bashplus.server.host.repository.HostRepository
-import com.bashplus.server.information.dto.CategoryInformationDTO
-import com.bashplus.server.information.dto.HostInformationDTO
+import com.bashplus.server.common.SortingEnum
+import com.bashplus.server.information.dto.OrderByEnum
 import com.bashplus.server.information.dto.VideoInformationDTO
-import com.bashplus.server.information.repository.CategoryRepository
+import com.bashplus.server.video.domain.Video
 import com.bashplus.server.video.repository.VideoRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
@@ -17,35 +16,75 @@ class SearchService {
     @Autowired
     private lateinit var videoRepository: VideoRepository
 
-    @Autowired
-    private lateinit var conferenceRepository: ConferenceRepository
-
-    @Autowired
-    private lateinit var conferenceHostRepository: ConferenceRepository
-
-    @Autowired
-    private lateinit var hostRepository: HostRepository
-
-    @Autowired
-    private lateinit var categoryRepository: CategoryRepository
-
-    fun getAllVideosByConference(keyword: String, page: Pageable): ResponseListDTO<VideoInformationDTO> {
-        val result = videoRepository.findAllByConferenceTitle(keyword, page)
+    fun getConferenceSearchResult(keyword: String, order: OrderByEnum, sort: SortingEnum, page: Pageable): ResponseListDTO<VideoInformationDTO> {
+        lateinit var result: Page<Video>
+        if (order == OrderByEnum.DATE) {
+            if (sort == SortingEnum.DESC) {
+                result = videoRepository.findAllByConferenceTitleIsLikeIgnoreCaseOrderByConferenceStartAtTimeDesc(mappingKeyword(keyword), page)
+            } else {
+                result = videoRepository.findAllByConferenceTitleIsLikeIgnoreCaseOrderByConferenceStartAtTimeAsc(mappingKeyword(keyword), page)
+            }
+        } else {
+            if (sort == SortingEnum.DESC) {
+                result = videoRepository.findAllByConferenceTitleIsLikeIgnoreCaseOrderByLike(mappingKeyword(keyword), page)
+            } else {
+                result = videoRepository.findAllByConferenceTitleIsLikeIgnoreCaseOrderByLikeAsc(mappingKeyword(keyword), page)
+            }
+        }
         return ResponseListDTO(result.toList().map { video -> VideoInformationDTO(video) }, page.pageNumber, page.pageSize, result.totalElements)
     }
 
-    fun getHostSearchResult(keyword: String, page: Pageable): ResponseListDTO<HostInformationDTO> {
-        val result = hostRepository.findAllByCompanyIsLikeIgnoreCase(mappingKeyword(keyword), page)
-        return ResponseListDTO(result.toList().map { host -> HostInformationDTO(host) }, page.pageNumber, page.pageSize, result.totalElements)
+    fun getHostSearchResult(keyword: String, order: OrderByEnum, sort: SortingEnum, page: Pageable): ResponseListDTO<VideoInformationDTO> {
+        lateinit var result: Page<Video>
+        if (order == OrderByEnum.DATE) {
+            if (sort == SortingEnum.DESC) {
+                result = videoRepository.findAllByConferenceHost(mappingKeyword(keyword), page)
+            } else {
+                result = videoRepository.findAllByConferenceHostAsc(mappingKeyword(keyword), page)
+            }
+        } else {
+            if (sort == SortingEnum.DESC) {
+                result = videoRepository.findAllByConferenceHostOrderByLike(mappingKeyword(keyword), page)
+            } else {
+                result = videoRepository.findAllByConferenceHostOrderByLikeAsc(mappingKeyword(keyword), page)
+            }
+        }
+        return ResponseListDTO(result.toList().map { video -> VideoInformationDTO(video) }, page.pageNumber, page.pageSize, result.totalElements)
     }
 
-    fun getCategorySearchResult(keyword: String, page: Pageable): ResponseListDTO<CategoryInformationDTO> {
-        val result = categoryRepository.findAllByCategoryIsLikeIgnoreCase(mappingKeyword(keyword), page)
-        return ResponseListDTO(result.toList().map { category -> CategoryInformationDTO(category) }, page.pageNumber, page.pageSize, result.totalElements)
+    fun getCategorySearchResult(keyword: String, order: OrderByEnum, sort: SortingEnum, page: Pageable): ResponseListDTO<VideoInformationDTO> {
+        lateinit var result: Page<Video>
+        if (order == OrderByEnum.DATE) {
+            if (sort == SortingEnum.DESC) {
+                result = videoRepository.findAllByVideoCategory(mappingKeyword(keyword), page)
+            } else {
+                result = videoRepository.findAllByVideoCategoryAsc(mappingKeyword(keyword), page)
+            }
+        } else {
+            if (sort == SortingEnum.DESC) {
+                result = videoRepository.findAllByVideoCategoryOrderByLike(mappingKeyword(keyword), page)
+            } else {
+                result = videoRepository.findAllByVideoCategoryOrderByLikeAsc(mappingKeyword(keyword), page)
+            }
+        }
+        return ResponseListDTO(result.toList().map { video -> VideoInformationDTO(video) }, page.pageNumber, page.pageSize, result.totalElements)
     }
 
-    fun getVideoSearchResult(keyword: String, page: Pageable): ResponseListDTO<VideoInformationDTO> {
-        val result = videoRepository.findAllByTitleIsLikeIgnoreCase(mappingKeyword(keyword), page)
+    fun getVideoSearchResult(keyword: String, order: OrderByEnum, sort: SortingEnum, page: Pageable): ResponseListDTO<VideoInformationDTO> {
+        lateinit var result: Page<Video>
+        if (order == OrderByEnum.DATE) {
+            if (sort == SortingEnum.DESC) {
+                result = videoRepository.findAllByTitleIsLikeIgnoreCaseOrderByConferenceStartAtTimeDesc(mappingKeyword(keyword), page)
+            } else {
+                result = videoRepository.findAllByTitleIsLikeIgnoreCaseOrderByConferenceStartAtTimeAsc(mappingKeyword(keyword), page)
+            }
+        } else {
+            if (sort == SortingEnum.DESC) {
+                result = videoRepository.findAllByTitleIsLikeIgnoreCaseOrderByLike(mappingKeyword(keyword), page)
+            } else {
+                result = videoRepository.findAllByTitleIsLikeIgnoreCaseOrderByLikeAsc(mappingKeyword(keyword), page)
+            }
+        }
         return ResponseListDTO(result.toList().map { video -> VideoInformationDTO(video) }, page.pageNumber, page.pageSize, result.totalElements)
     }
 
