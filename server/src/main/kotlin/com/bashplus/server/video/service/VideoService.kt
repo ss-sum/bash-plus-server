@@ -3,18 +3,18 @@ package com.bashplus.server.video.service
 import com.bashplus.server.archive.domain.Archive
 import com.bashplus.server.archive.repository.ArchiveRepository
 import com.bashplus.server.common.ResponseListDTO
+import com.bashplus.server.common.SortingEnum
 import com.bashplus.server.common.exception.ApiException
 import com.bashplus.server.common.exception.ExceptionEnum
 import com.bashplus.server.users.repository.UsersRepository
 import com.bashplus.server.video.domain.Comment
-import com.bashplus.server.video.dto.CommentDTO
-import com.bashplus.server.video.dto.CommentRequestDTO
-import com.bashplus.server.video.dto.VideoDTO
-import com.bashplus.server.video.dto.WatchRequestDTO
+import com.bashplus.server.video.domain.Video
+import com.bashplus.server.video.dto.*
 import com.bashplus.server.video.repository.CommentRepository
 import com.bashplus.server.video.repository.VideoRepository
 import com.bashplus.server.video.repository.VideoTagRepository
 import org.springframework.beans.factory.annotation.Autowired
+import org.springframework.data.domain.Page
 import org.springframework.data.domain.Pageable
 import org.springframework.stereotype.Service
 
@@ -35,8 +35,21 @@ class VideoService {
     @Autowired
     private lateinit var archiveRepository: ArchiveRepository
 
-    fun getAllVideos(page: Pageable): ResponseListDTO<VideoDTO> {
-        val result = videoRepository.findAll(page)
+    fun getAllVideos(order: VideoOrderEnum, sort: SortingEnum, page: Pageable): ResponseListDTO<VideoDTO> {
+        lateinit var result: Page<Video>
+        if (order == VideoOrderEnum.DATE) {
+            if (sort == SortingEnum.DESC) {
+                result = videoRepository.findAllByOrderByConferenceStartAtTimeDesc(page)
+            } else {
+                result = videoRepository.findAllByOrderByConferenceStartAtTimeAsc(page)
+            }
+        } else {
+            if (sort == SortingEnum.DESC) {
+                result = videoRepository.findAllByLikeDesc(page)
+            } else {
+                result = videoRepository.findAllByLikeAsc(page)
+            }
+        }
         return ResponseListDTO(result.toList().map { video ->
             val videoTag = videoTagRepository.findTagByVid(video.vid!!)
             VideoDTO(video, videoTag)

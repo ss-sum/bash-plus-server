@@ -2,7 +2,7 @@ package com.bashplus.server.information.service
 
 import com.bashplus.server.common.ResponseListDTO
 import com.bashplus.server.common.SortingEnum
-import com.bashplus.server.information.dto.OrderByEnum
+import com.bashplus.server.information.dto.SearchOrderEnum
 import com.bashplus.server.information.dto.VideoInformationDTO
 import com.bashplus.server.video.domain.Video
 import com.bashplus.server.video.repository.VideoRepository
@@ -16,9 +16,9 @@ class SearchService {
     @Autowired
     private lateinit var videoRepository: VideoRepository
 
-    fun getConferenceSearchResult(keyword: String, order: OrderByEnum, sort: SortingEnum, page: Pageable): ResponseListDTO<VideoInformationDTO> {
+    fun getConferenceSearchResult(keyword: String, order: SearchOrderEnum, sort: SortingEnum, page: Pageable): ResponseListDTO<VideoInformationDTO> {
         lateinit var result: Page<Video>
-        if (order == OrderByEnum.DATE) {
+        if (order == SearchOrderEnum.DATE) {
             if (sort == SortingEnum.DESC) {
                 result = videoRepository.findAllByConferenceTitleIsLikeIgnoreCaseOrderByConferenceStartAtTimeDesc(mappingKeyword(keyword), page)
             } else {
@@ -34,9 +34,9 @@ class SearchService {
         return ResponseListDTO(result.toList().map { video -> VideoInformationDTO(video) }, page.pageNumber, page.pageSize, result.totalElements)
     }
 
-    fun getHostSearchResult(keyword: String, order: OrderByEnum, sort: SortingEnum, page: Pageable): ResponseListDTO<VideoInformationDTO> {
+    fun getHostSearchResult(keyword: String, order: SearchOrderEnum, sort: SortingEnum, page: Pageable): ResponseListDTO<VideoInformationDTO> {
         lateinit var result: Page<Video>
-        if (order == OrderByEnum.DATE) {
+        if (order == SearchOrderEnum.DATE) {
             if (sort == SortingEnum.DESC) {
                 result = videoRepository.findAllByConferenceHost(mappingKeyword(keyword), page)
             } else {
@@ -52,9 +52,9 @@ class SearchService {
         return ResponseListDTO(result.toList().map { video -> VideoInformationDTO(video) }, page.pageNumber, page.pageSize, result.totalElements)
     }
 
-    fun getCategorySearchResult(keyword: String, order: OrderByEnum, sort: SortingEnum, page: Pageable): ResponseListDTO<VideoInformationDTO> {
+    fun getCategorySearchResult(keyword: String, order: SearchOrderEnum, sort: SortingEnum, page: Pageable): ResponseListDTO<VideoInformationDTO> {
         lateinit var result: Page<Video>
-        if (order == OrderByEnum.DATE) {
+        if (order == SearchOrderEnum.DATE) {
             if (sort == SortingEnum.DESC) {
                 result = videoRepository.findAllByVideoCategory(mappingKeyword(keyword), page)
             } else {
@@ -70,9 +70,9 @@ class SearchService {
         return ResponseListDTO(result.toList().map { video -> VideoInformationDTO(video) }, page.pageNumber, page.pageSize, result.totalElements)
     }
 
-    fun getVideoSearchResult(keyword: String, order: OrderByEnum, sort: SortingEnum, page: Pageable): ResponseListDTO<VideoInformationDTO> {
+    fun getVideoSearchResult(keyword: String, order: SearchOrderEnum, sort: SortingEnum, page: Pageable): ResponseListDTO<VideoInformationDTO> {
         lateinit var result: Page<Video>
-        if (order == OrderByEnum.DATE) {
+        if (order == SearchOrderEnum.DATE) {
             if (sort == SortingEnum.DESC) {
                 result = videoRepository.findAllByTitleIsLikeIgnoreCaseOrderByConferenceStartAtTimeDesc(mappingKeyword(keyword), page)
             } else {

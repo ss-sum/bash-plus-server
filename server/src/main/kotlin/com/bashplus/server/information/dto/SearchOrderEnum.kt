@@ -1,6 +1,6 @@
 package com.bashplus.server.information.dto
 
-enum class OrderByEnum {
+enum class SearchOrderEnum {
     DATE,
     LIKE
 }
