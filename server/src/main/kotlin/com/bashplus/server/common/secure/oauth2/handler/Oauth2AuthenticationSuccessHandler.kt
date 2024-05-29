@@ -18,11 +18,16 @@ import org.springframework.stereotype.Component
 
 @Component
 @RequiredArgsConstructor
-class Oauth2AuthenticationSuccessHandler @Autowired constructor(private val tokenProvider: TokenProvider) : SimpleUrlAuthenticationSuccessHandler() {
+class Oauth2AuthenticationSuccessHandler @Autowired constructor(private val tokenProvider: TokenProvider) :
+    SimpleUrlAuthenticationSuccessHandler() {
 
     private var requestCache = HttpSessionRequestCache()
     private var redirectStrategy = DefaultRedirectStrategy()
-    override fun onAuthenticationSuccess(request: HttpServletRequest?, response: HttpServletResponse?, authentication: Authentication?) {
+    override fun onAuthenticationSuccess(
+        request: HttpServletRequest?,
+        response: HttpServletResponse?,
+        authentication: Authentication?
+    ) {
         val user: OAuth2UserDTO? = authentication?.principal as? OAuth2UserDTO
         try {
             val accessToken = tokenProvider.createToken(authentication!!)
@@ -32,6 +37,7 @@ class Oauth2AuthenticationSuccessHandler @Autowired constructor(private val toke
             val cookie = Cookie("Authorization", accessToken)
             cookie.secure = true
             cookie.isHttpOnly = true
+            cookie.path = "/"
             response?.addCookie(cookie)
             redirectStrategy.sendRedirect(request, response, uri);
         } catch (e: Exception) {

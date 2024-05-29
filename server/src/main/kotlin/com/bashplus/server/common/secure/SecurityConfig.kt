@@ -25,9 +25,13 @@ import org.springframework.security.web.util.matcher.AntPathRequestMatcher
 
 @Configuration
 @RequiredArgsConstructor
-class SecurityConfig @Autowired constructor(private var tokenProvider: TokenProvider, private val userService: CustomOAuth2UserService) {
+class SecurityConfig @Autowired constructor(
+    private var tokenProvider: TokenProvider,
+    private val userService: CustomOAuth2UserService
+) {
 
-    private val authenticationSuccessHandler: Oauth2AuthenticationSuccessHandler = Oauth2AuthenticationSuccessHandler(tokenProvider)
+    private val authenticationSuccessHandler: Oauth2AuthenticationSuccessHandler =
+        Oauth2AuthenticationSuccessHandler(tokenProvider)
     private val authenticationFailureHandler: Oauth2AuthenticationFailureHandler = Oauth2AuthenticationFailureHandler()
     private val jwtAccessDeniedHandler: JwtAccessDeniedHandler = JwtAccessDeniedHandler()
     private val jwtAuthenticationEntryPoint: JwtAuthenticationEntryPoint = JwtAuthenticationEntryPoint()
@@ -36,7 +40,7 @@ class SecurityConfig @Autowired constructor(private var tokenProvider: TokenProv
     fun webSecurityCustomizer(): WebSecurityCustomizer {
         return WebSecurityCustomizer { web ->
             web.ignoring()
-                    .requestMatchers(AntPathRequestMatcher("/auth/authorization/**"))
+                .requestMatchers(AntPathRequestMatcher("/auth/authorization/**"))
         }
     }
 
@@ -49,45 +53,46 @@ class SecurityConfig @Autowired constructor(private var tokenProvider: TokenProv
     @Bean
     fun filterChain(http: HttpSecurity): SecurityFilterChain {
         http
-                .csrf { csrf: CsrfConfigurer<HttpSecurity> -> csrf.disable() }
-                .headers { headerConfig: HeadersConfigurer<HttpSecurity?> ->
-                    headerConfig.frameOptions({ frameOptionsConfig ->
-                        frameOptionsConfig.disable()
-                    })
+            .csrf { csrf: CsrfConfigurer<HttpSecurity> -> csrf.disable() }
+            .headers { headerConfig: HeadersConfigurer<HttpSecurity?> ->
+                headerConfig.frameOptions({ frameOptionsConfig ->
+                    frameOptionsConfig.disable()
+                })
+            }
+            .httpBasic { it.disable() }
+            .formLogin { it.disable() }
+            .sessionManagement { it -> it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
+            .exceptionHandling {
+                it.authenticationEntryPoint(jwtAuthenticationEntryPoint)
+                    .accessDeniedHandler(jwtAccessDeniedHandler)
+            }
+            .authorizeHttpRequests { request ->
+                request
+                    .requestMatchers(AntPathRequestMatcher("/")).permitAll()
+                    .requestMatchers(AntPathRequestMatcher("/favicon.ico")).permitAll()
+                    .requestMatchers(AntPathRequestMatcher("/swagger-ui/**")).permitAll()
+                    .requestMatchers(AntPathRequestMatcher("/v3/api-docs/**")).permitAll()
+                    .requestMatchers(AntPathRequestMatcher("/swagger-resources/**")).permitAll()
+                    .requestMatchers(AntPathRequestMatcher("/error")).permitAll()
+                    .requestMatchers(AntPathRequestMatcher("/oauth2/**")).permitAll()
+                    .requestMatchers(AntPathRequestMatcher("/auth/login/social/platform/**")).permitAll()
+                    .requestMatchers(AntPathRequestMatcher("/video/**", "GET")).permitAll()
+                    .requestMatchers(AntPathRequestMatcher("/information/**")).permitAll()
+                    .requestMatchers(AntPathRequestMatcher("/search/**")).permitAll()
+                    .anyRequest().authenticated()
+            }
+            .oauth2Login {
+                it.userInfoEndpoint { endpoint ->
+                    endpoint.userService(userService)
                 }
-                .httpBasic { it.disable() }
-                .formLogin { it.disable() }
-                .sessionManagement { it -> it.sessionCreationPolicy(SessionCreationPolicy.STATELESS) }
-                .exceptionHandling {
-                    it.authenticationEntryPoint(jwtAuthenticationEntryPoint)
-                            .accessDeniedHandler(jwtAccessDeniedHandler)
-                }
-                .authorizeHttpRequests { request ->
-                    request
-                            .requestMatchers(AntPathRequestMatcher("/")).permitAll()
-                            .requestMatchers(AntPathRequestMatcher("/swagger-ui/**")).permitAll()
-                            .requestMatchers(AntPathRequestMatcher("/v3/api-docs/**")).permitAll()
-                            .requestMatchers(AntPathRequestMatcher("/swagger-resources/**")).permitAll()
-                            .requestMatchers(AntPathRequestMatcher("/error")).permitAll()
-                            .requestMatchers(AntPathRequestMatcher("/oauth2/**")).permitAll()
-                            .requestMatchers(AntPathRequestMatcher("/auth/login/social/platform/**")).permitAll()
-                            .requestMatchers(AntPathRequestMatcher("/video/**", "GET")).permitAll()
-                            .requestMatchers(AntPathRequestMatcher("/information/**")).permitAll()
-                            .requestMatchers(AntPathRequestMatcher("/search/**")).permitAll()
-                            .anyRequest().authenticated()
-                }
-                .oauth2Login {
-                    it.userInfoEndpoint { endpoint ->
-                        endpoint.userService(userService)
-                    }
-                            .authorizationEndpoint { endpoint -> endpoint.baseUri("/auth/login/social/platform") }
-                            .successHandler(authenticationSuccessHandler)
-                            .failureHandler(authenticationFailureHandler)
+                    .authorizationEndpoint { endpoint -> endpoint.baseUri("/auth/login/social/platform") }
+                    .successHandler(authenticationSuccessHandler)
+                    .failureHandler(authenticationFailureHandler)
 
-                }
-                .addFilterBefore(JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter::class.java)
-                .addFilterBefore(CustomExceptionHandlerFilter(), JwtFilter::class.java)
-                .addFilterBefore(CustomExceptionHandlerFilter(), OAuth2LoginAuthenticationFilter::class.java)
+            }
+            .addFilterBefore(JwtFilter(tokenProvider), UsernamePasswordAuthenticationFilter::class.java)
+            .addFilterBefore(CustomExceptionHandlerFilter(), JwtFilter::class.java)
+            .addFilterBefore(CustomExceptionHandlerFilter(), OAuth2LoginAuthenticationFilter::class.java)
 
         return http.build()
     }
