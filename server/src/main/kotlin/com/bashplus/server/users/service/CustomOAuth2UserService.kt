@@ -39,10 +39,22 @@ class CustomOAuth2UserService : DefaultOAuth2UserService() {
     private fun joinOrUpdate(authUser: OAuth2UserDTO): Users {
         var user: Optional<Users> = usersRepository.findByIdAndType(authUser.id, authUser.platform)
         if (!user.isPresent) {
-            return usersRepository.save(Users(authUser.id, authUser.platform, authUser.name, authUser.accessToken, authUser.refreshToken, authUser.email))
+            return usersRepository.save(
+                Users(
+                    authUser.id,
+                    authUser.platform,
+                    authUser.name,
+                    authUser.accessToken,
+                    authUser.refreshToken,
+                    authUser.email,
+                    authUser.image
+                )
+            )
         } else {
-            usersRepository.updateToken(user.get().id, user.get().type, authUser.accessToken, authUser.refreshToken
-                    ?: "")
+            usersRepository.updateToken(
+                user.get().id, user.get().type, authUser.accessToken, authUser.refreshToken
+                    ?: ""
+            )
             return user.get()
         }
     }

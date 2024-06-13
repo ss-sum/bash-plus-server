@@ -12,7 +12,8 @@ class OAuth2UserDTO private constructor(
     val email: String,
     val platform: String,
     val accessToken: String,
-    val refreshToken: String?
+    val refreshToken: String?,
+    var image: String?
 ) : OAuth2User {
 
     constructor(attributes: Map<String, Any>, userRequest: OAuth2UserRequest) :
@@ -23,7 +24,8 @@ class OAuth2UserDTO private constructor(
                 email = attributes[EMAIL_ATTRIBUTE]?.toString() ?: "",
                 platform = userRequest.clientRegistration.registrationId ?: "",
                 accessToken = userRequest.accessToken.tokenValue.toString() ?: "",
-                refreshToken = userRequest.additionalParameters["refresh_token"]?.toString() ?: null
+                refreshToken = userRequest.additionalParameters["refresh_token"]?.toString() ?: null,
+                image = attributes[IMAGE_ATTRIBUTE]?.toString() ?: attributes[IMAGE_ATTRIBUTE_GITHUB]?.toString() ?: ""
             )
 
 
@@ -31,6 +33,8 @@ class OAuth2UserDTO private constructor(
 
         private const val ID_ATTRIBUTE: String = "sub";
         private const val ID_ATTRIBUTE_GITHUB: String = "id";
+        private const val IMAGE_ATTRIBUTE: String = "picture";
+        private const val IMAGE_ATTRIBUTE_GITHUB: String = "avatar_url";
         private const val EMAIL_ATTRIBUTE: String = "email";
         private const val NAME_ATTRIBUTE: String = "name";
     }
