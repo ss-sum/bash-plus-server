@@ -6,7 +6,15 @@ import jakarta.persistence.GenerationType
 import jakarta.persistence.Id
 
 @Entity
-class Users(id: String, type: String, name: String, access: String? = null, refresh: String? = null, email: String? = null) {
+class Users(
+    id: String,
+    type: String,
+    name: String,
+    access: String? = null,
+    refresh: String? = null,
+    email: String? = null,
+    image: String? = null
+) {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     var uid: Long? = null
@@ -16,4 +24,5 @@ class Users(id: String, type: String, name: String, access: String? = null, refr
     var access: String? = access
     var refresh: String? = refresh
     var email: String? = email
+    var image: String? = image
 }
