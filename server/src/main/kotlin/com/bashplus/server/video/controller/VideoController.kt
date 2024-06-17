@@ -130,21 +130,77 @@ class VideoController {
         return ResponseDTO(HttpStatus.OK.reasonPhrase)
     }
 
-    @PutMapping("/comment/{commentId}")
+    @Operation(summary = "영상 댓글 수정 API", description = "영상에 본인의 댓글을 수정하게 해주는 API")
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
+            ApiResponse(
+                responseCode = "400",
+                description = "BAD REQUEST",
+                content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]
+            ),
+            ApiResponse(
+                responseCode = "500",
+                description = "INTERNAL SERVER ERROR",
+                content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]
+            )
+        ]
+    )
+    @PutMapping("/comment")
     fun updateComment(
         @PathVariable("commentId") commentId: Long,
         @NotNull @RequestBody commentRequest: CommentRequestDTO
     ): ResponseDTO<String> {
         val userId = (SecurityContextHolder.getContext().authentication.principal as User).username.toLong()
         commentRequest.uid = userId
-        videoService.updateComment(commentId, commentRequest)
+        videoService.updateComment(commentRequest)
         return ResponseDTO(HttpStatus.OK.reasonPhrase)
     }
 
+    @Operation(summary = "영상 댓글 삭제 API", description = "영상에 본인의 댓글을 삭제하게 해주는 API")
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
+            ApiResponse(
+                responseCode = "400",
+                description = "BAD REQUEST",
+                content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]
+            ),
+            ApiResponse(
+                responseCode = "500",
+                description = "INTERNAL SERVER ERROR",
+                content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]
+            )
+        ]
+    )
     @DeleteMapping("/comment/{commentId}")
     fun deleteComment(@PathVariable("commentId") commentId: Long): ResponseDTO<String> {
         val userId = (SecurityContextHolder.getContext().authentication.principal as User).username.toLong()
         videoService.deleteComment(commentId)
+        return ResponseDTO(HttpStatus.OK.reasonPhrase)
+    }
+
+    @Operation(summary = "영상 댓글 좋아요 API", description = "영상 댓글에 좋아요를 기록하는 API. 기존에 좋아요 기록이 있으면 좋아요 해제, 없으면 좋아요 기록 추가.")
+    @ApiResponses(
+        value = [
+            ApiResponse(responseCode = "200", description = "OK", useReturnTypeSchema = true),
+            ApiResponse(
+                responseCode = "400",
+                description = "BAD REQUEST",
+                content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]
+            ),
+            ApiResponse(
+                responseCode = "500",
+                description = "INTERNAL SERVER ERROR",
+                content = [Content(schema = Schema(implementation = ApiExceptionEntity::class))]
+            )
+        ]
+    )
+    @PostMapping("/comment/like")
+    fun likeComment(@NotNull @RequestBody commentRequest: CommentRequestDTO): ResponseDTO<String> {
+        val userId = (SecurityContextHolder.getContext().authentication.principal as User).username.toLong()
+        commentRequest.uid = userId
+        videoService.likeComment(commentRequest)
         return ResponseDTO(HttpStatus.OK.reasonPhrase)
     }
 

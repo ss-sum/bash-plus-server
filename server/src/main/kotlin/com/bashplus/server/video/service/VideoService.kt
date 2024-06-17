@@ -8,8 +8,10 @@ import com.bashplus.server.common.exception.ApiException
 import com.bashplus.server.common.exception.ExceptionEnum
 import com.bashplus.server.users.repository.UsersRepository
 import com.bashplus.server.video.domain.Comment
+import com.bashplus.server.video.domain.CommentLike
 import com.bashplus.server.video.domain.Video
 import com.bashplus.server.video.dto.*
+import com.bashplus.server.video.repository.CommentLikeRepository
 import com.bashplus.server.video.repository.CommentRepository
 import com.bashplus.server.video.repository.VideoRepository
 import com.bashplus.server.video.repository.VideoTagRepository
@@ -34,6 +36,9 @@ class VideoService {
 
     @Autowired
     private lateinit var archiveRepository: ArchiveRepository
+
+    @Autowired
+    private lateinit var commentLikeRepository: CommentLikeRepository
 
     fun getAllVideos(order: VideoOrderEnum, sort: SortingEnum, page: Pageable): ResponseListDTO<VideoDTO> {
         lateinit var result: Page<Video>
@@ -91,8 +96,8 @@ class VideoService {
         }
     }
 
-    fun updateComment(commentId: Long, request: CommentRequestDTO) {
-        val comment = commentRepository.findByCid(commentId)
+    fun updateComment(request: CommentRequestDTO) {
+        val comment = commentRepository.findByCid(request.cid)
         if (comment.isPresent) {
             comment.get().update(request)
             commentRepository.save(comment.get())
@@ -108,6 +113,26 @@ class VideoService {
         } else {
             throw ApiException(ExceptionEnum.COMMENT_NOT_FOUND)
         }
+    }
+
+    fun likeComment(request: CommentRequestDTO) {
+        val comment = commentRepository.findByCid(request.cid)
+        if (comment.isPresent) {
+            val existedValue = commentLikeRepository.findByCommentCidAndUserUid(request.cid, request.uid)
+            if (existedValue.isEmpty()) {
+                val commentLike = CommentLike(comment.get(), usersRepository.findByUid(request.uid).get())
+                comment.get().like()
+                commentRepository.save(comment.get())
+                commentLikeRepository.save(commentLike)
+            } else {
+                comment.get().unlike()
+                commentRepository.save(comment.get())
+                commentLikeRepository.delete(existedValue.get())
+            }
+        } else {
+            throw ApiException(ExceptionEnum.COMMENT_NOT_FOUND)
+        }
+
     }
 
     fun updateWatchRecord(request: WatchRequestDTO) {

@@ -17,8 +17,19 @@ class Comment(
     var cid: Long? = null
     var content: String = content
     var createdAt: LocalDateTime = LocalDateTime.now(ZoneId.of("UTC"))
+    var like: Long = 0
 
     open fun update(request: CommentRequestDTO) {
         this.content = request.content
+    }
+
+    open fun like() {
+        this.like++
+    }
+
+    open fun unlike() {
+        if (this.like > 0) {
+            this.like--
+        }
     }
 }
