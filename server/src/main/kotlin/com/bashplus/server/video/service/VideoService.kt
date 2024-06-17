@@ -70,7 +70,12 @@ class VideoService {
         val video = videoRepository.findByVid(videoId)
         if (video.isPresent) {
             val result = commentRepository.findAllByVideoVid(videoId, page)
-            return ResponseListDTO(result.toList().map { comment -> CommentDTO(comment) }, page.pageNumber, page.pageSize, result.totalElements)
+            return ResponseListDTO(
+                result.toList().map { comment -> CommentDTO(comment) },
+                page.pageNumber,
+                page.pageSize,
+                result.totalElements
+            )
         } else {
             throw ApiException(ExceptionEnum.VIDEO_NOT_FOUND)
         }
@@ -83,6 +88,25 @@ class VideoService {
             commentRepository.save(Comment(user, video.get(), request.content))
         } else {
             throw ApiException(ExceptionEnum.VIDEO_NOT_FOUND)
+        }
+    }
+
+    fun updateComment(commentId: Long, request: CommentRequestDTO) {
+        val comment = commentRepository.findByCid(commentId)
+        if (comment.isPresent) {
+            comment.get().update(request)
+            commentRepository.save(comment.get())
+        } else {
+            throw ApiException(ExceptionEnum.COMMENT_NOT_FOUND)
+        }
+    }
+
+    fun deleteComment(commentId: Long) {
+        val comment = commentRepository.findByCid(commentId)
+        if (comment.isPresent) {
+            commentRepository.delete(comment.get())
+        } else {
+            throw ApiException(ExceptionEnum.COMMENT_NOT_FOUND)
         }
     }
 
