@@ -19,6 +19,6 @@ class CommentDTO private constructor(
                 vid = comment.video.vid ?: 0,
                 content = comment.content,
                 createdAt = comment.createdAt,
-                like = comment.like
+                like = comment.likes
             )
 }

@@ -49,7 +49,7 @@ class VideoController {
     fun getAllVideo(
         @RequestParam pageSize: Int,
         @RequestParam pageNum: Int,
-        @RequestParam(defaultValue = "DATE") order: VideoOrderEnum,
+        @RequestParam(defaultValue = "DATE") order: OrderEnum,
         @RequestParam(defaultValue = "DESC") sort: SortingEnum
     ): ResponseListDTO<VideoDTO> {
         val pageable: Pageable = PageRequest.of(pageNum, pageSize)
@@ -99,10 +99,12 @@ class VideoController {
     fun getVideoComments(
         @PathVariable videoId: Long,
         @RequestParam pageSize: Int,
-        @RequestParam pageNum: Int
+        @RequestParam pageNum: Int,
+        @RequestParam(defaultValue = "DATE") order: OrderEnum,
+        @RequestParam(defaultValue = "DESC") sort: SortingEnum
     ): ResponseListDTO<CommentDTO> {
         val pageable: Pageable = PageRequest.of(pageNum, pageSize)
-        val result = videoService.getVideoCommentInfo(videoId, pageable)
+        val result = videoService.getVideoCommentInfo(videoId, order, sort, pageable)
         return result
     }
 

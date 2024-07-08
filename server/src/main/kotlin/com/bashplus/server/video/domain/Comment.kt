@@ -3,6 +3,7 @@ package com.bashplus.server.video.domain
 import com.bashplus.server.users.domain.Users
 import com.bashplus.server.video.dto.CommentRequestDTO
 import jakarta.persistence.*
+import org.hibernate.annotations.ColumnDefault
 import java.time.LocalDateTime
 import java.time.ZoneId
 
@@ -17,19 +18,21 @@ class Comment(
     var cid: Long? = null
     var content: String = content
     var createdAt: LocalDateTime = LocalDateTime.now(ZoneId.of("UTC"))
-    var like: Long = 0
+
+    @ColumnDefault("0")
+    var likes: Long = 0
 
     open fun update(request: CommentRequestDTO) {
         this.content = request.content
     }
 
     open fun like() {
-        this.like++
+        this.likes++
     }
 
     open fun unlike() {
-        if (this.like > 0) {
-            this.like--
+        if (this.likes > 0) {
+            this.likes--
         }
     }
 }

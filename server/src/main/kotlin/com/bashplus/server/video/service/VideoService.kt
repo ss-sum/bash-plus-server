@@ -40,9 +40,9 @@ class VideoService {
     @Autowired
     private lateinit var commentLikeRepository: CommentLikeRepository
 
-    fun getAllVideos(order: VideoOrderEnum, sort: SortingEnum, page: Pageable): ResponseListDTO<VideoDTO> {
+    fun getAllVideos(order: OrderEnum, sort: SortingEnum, page: Pageable): ResponseListDTO<VideoDTO> {
         lateinit var result: Page<Video>
-        if (order == VideoOrderEnum.DATE) {
+        if (order == OrderEnum.DATE) {
             if (sort == SortingEnum.DESC) {
                 result = videoRepository.findAllByOrderByConferenceStartAtTimeDesc(page)
             } else {
@@ -71,10 +71,28 @@ class VideoService {
         }
     }
 
-    fun getVideoCommentInfo(videoId: Long, page: Pageable): ResponseListDTO<CommentDTO> {
+    fun getVideoCommentInfo(
+        videoId: Long,
+        order: OrderEnum,
+        sort: SortingEnum,
+        page: Pageable
+    ): ResponseListDTO<CommentDTO> {
         val video = videoRepository.findByVid(videoId)
         if (video.isPresent) {
-            val result = commentRepository.findAllByVideoVid(videoId, page)
+            lateinit var result: Page<Comment>
+            if (order == OrderEnum.DATE) {
+                if (sort == SortingEnum.DESC) {
+                    result = commentRepository.findAllByVideoVidOrderByCreatedAtDesc(videoId, page)
+                } else {
+                    result = commentRepository.findAllByVideoVidOrderByCreatedAtAsc(videoId, page)
+                }
+            } else {
+                if (sort == SortingEnum.DESC) {
+                    result = commentRepository.findAllByVideoVidOrderByLikesDesc(videoId, page)
+                } else {
+                    result = commentRepository.findAllByVideoVidOrderByLikesAsc(videoId, page)
+                }
+            }
             return ResponseListDTO(
                 result.toList().map { comment -> CommentDTO(comment) },
                 page.pageNumber,

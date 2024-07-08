@@ -12,4 +12,8 @@ open interface CommentRepository : JpaRepository<Comment, String> {
     open fun findAllByUserUid(uid: Long, pageable: Pageable): Page<Comment>
     open fun findAllByVideoVid(vid: Long, pageable: Pageable): Page<Comment>
     open fun findByCid(cid: Long): Optional<Comment>
+    open fun findAllByVideoVidOrderByCreatedAtDesc(vid: Long, pageable: Pageable): Page<Comment>
+    open fun findAllByVideoVidOrderByCreatedAtAsc(vid: Long, pageable: Pageable): Page<Comment>
+    open fun findAllByVideoVidOrderByLikesDesc(vid: Long, pageable: Pageable): Page<Comment>
+    open fun findAllByVideoVidOrderByLikesAsc(vid: Long, pageable: Pageable): Page<Comment>
 }
