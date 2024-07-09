@@ -8,8 +8,10 @@ import com.bashplus.server.common.exception.ApiException
 import com.bashplus.server.common.exception.ExceptionEnum
 import com.bashplus.server.users.repository.UsersRepository
 import com.bashplus.server.video.domain.Comment
+import com.bashplus.server.video.domain.CommentLike
 import com.bashplus.server.video.domain.Video
 import com.bashplus.server.video.dto.*
+import com.bashplus.server.video.repository.CommentLikeRepository
 import com.bashplus.server.video.repository.CommentRepository
 import com.bashplus.server.video.repository.VideoRepository
 import com.bashplus.server.video.repository.VideoTagRepository
@@ -35,9 +37,12 @@ class VideoService {
     @Autowired
     private lateinit var archiveRepository: ArchiveRepository
 
-    fun getAllVideos(order: VideoOrderEnum, sort: SortingEnum, page: Pageable): ResponseListDTO<VideoDTO> {
+    @Autowired
+    private lateinit var commentLikeRepository: CommentLikeRepository
+
+    fun getAllVideos(order: OrderEnum, sort: SortingEnum, page: Pageable): ResponseListDTO<VideoDTO> {
         lateinit var result: Page<Video>
-        if (order == VideoOrderEnum.DATE) {
+        if (order == OrderEnum.DATE) {
             if (sort == SortingEnum.DESC) {
                 result = videoRepository.findAllByOrderByConferenceStartAtTimeDesc(page)
             } else {
@@ -66,11 +71,34 @@ class VideoService {
         }
     }
 
-    fun getVideoCommentInfo(videoId: Long, page: Pageable): ResponseListDTO<CommentDTO> {
+    fun getVideoCommentInfo(
+        videoId: Long,
+        order: OrderEnum,
+        sort: SortingEnum,
+        page: Pageable
+    ): ResponseListDTO<CommentDTO> {
         val video = videoRepository.findByVid(videoId)
         if (video.isPresent) {
-            val result = commentRepository.findAllByVideoVid(videoId, page)
-            return ResponseListDTO(result.toList().map { comment -> CommentDTO(comment) }, page.pageNumber, page.pageSize, result.totalElements)
+            lateinit var result: Page<Comment>
+            if (order == OrderEnum.DATE) {
+                if (sort == SortingEnum.DESC) {
+                    result = commentRepository.findAllByVideoVidOrderByCreatedAtDesc(videoId, page)
+                } else {
+                    result = commentRepository.findAllByVideoVidOrderByCreatedAtAsc(videoId, page)
+                }
+            } else {
+                if (sort == SortingEnum.DESC) {
+                    result = commentRepository.findAllByVideoVidOrderByLikesDesc(videoId, page)
+                } else {
+                    result = commentRepository.findAllByVideoVidOrderByLikesAsc(videoId, page)
+                }
+            }
+            return ResponseListDTO(
+                result.toList().map { comment -> CommentDTO(comment) },
+                page.pageNumber,
+                page.pageSize,
+                result.totalElements
+            )
         } else {
             throw ApiException(ExceptionEnum.VIDEO_NOT_FOUND)
         }
@@ -84,6 +112,45 @@ class VideoService {
         } else {
             throw ApiException(ExceptionEnum.VIDEO_NOT_FOUND)
         }
+    }
+
+    fun updateComment(request: CommentRequestDTO) {
+        val comment = commentRepository.findByCid(request.cid)
+        if (comment.isPresent) {
+            comment.get().update(request)
+            commentRepository.save(comment.get())
+        } else {
+            throw ApiException(ExceptionEnum.COMMENT_NOT_FOUND)
+        }
+    }
+
+    fun deleteComment(commentId: Long) {
+        val comment = commentRepository.findByCid(commentId)
+        if (comment.isPresent) {
+            commentRepository.delete(comment.get())
+        } else {
+            throw ApiException(ExceptionEnum.COMMENT_NOT_FOUND)
+        }
+    }
+
+    fun likeComment(request: CommentRequestDTO) {
+        val comment = commentRepository.findByCid(request.cid)
+        if (comment.isPresent) {
+            val existedValue = commentLikeRepository.findByCommentCidAndUserUid(request.cid, request.uid)
+            if (existedValue.isEmpty()) {
+                val commentLike = CommentLike(comment.get(), usersRepository.findByUid(request.uid).get())
+                comment.get().like()
+                commentRepository.save(comment.get())
+                commentLikeRepository.save(commentLike)
+            } else {
+                comment.get().unlike()
+                commentRepository.save(comment.get())
+                commentLikeRepository.delete(existedValue.get())
+            }
+        } else {
+            throw ApiException(ExceptionEnum.COMMENT_NOT_FOUND)
+        }
+
     }
 
     fun updateWatchRecord(request: WatchRequestDTO) {

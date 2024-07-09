@@ -1,6 +1,6 @@
 package com.bashplus.server.video.dto
 
-enum class VideoOrderEnum {
+enum class OrderEnum {
     DATE,
     LIKE
 }
